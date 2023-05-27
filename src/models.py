@@ -6,11 +6,31 @@ from sqlalchemy import Index
 db = SQLAlchemy()
 
 
+class Mood(db.Model):
+    __tablename__ = 'moods'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    description = db.Column(db.Text, nullable=False)
 
+    def __init__(self, description):
+        self.description = description
+        db.session.commit()
+
+    def __str__(self):
+        return f"{self.description}"
+
+    def __repr__(self):
+        return f"id:{self.id}, description:{self.description}"
+
+    def serialize(self):
+        response = {
+            "id": f"{self.id}",
+            "description": f"{self.description}"
+        }
+        return response
 
 
 #####
-# Examples of many to many 
+# Examples of many to many
 #####
 # teachers_students = db.Table(
 #     'teachers_students',
