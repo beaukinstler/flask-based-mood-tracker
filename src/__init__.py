@@ -34,8 +34,12 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate = Migrate(app, db)
 
-    from .api import teachers, students
-    app.register_blueprint(teachers.bp)
-    app.register_blueprint(students.bp)
+
+#######
+# Example of importing and registering the bluprints from the api folder
+#######
+    # from .api import teachers, students
+    # app.register_blueprint(teachers.bp)
+    # app.register_blueprint(students.bp)
 
     return app
