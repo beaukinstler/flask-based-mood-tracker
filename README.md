@@ -30,7 +30,7 @@ create the database you plan to use ..
 e.g. `docker exec pg_container psql -c "CREATE DATABASE example"`
 or `postgres=# CREATE DATABASE example;`
 
-## .evn
+## .env
 
 you can use a .env, which `flask db` commands can find. 
 Or, just use what's in the config.py defaults
@@ -90,3 +90,36 @@ To do this with a tool like "Insomnia" add the body as json:
     {
 	    "name":"Dr. Lovlace"
     }
+
+
+## After initial test
+
+
+
+1. use `flask db downgrade`, to drop the test tables.
+
+2. remove all the migrations from .\migrations\versions
+
+3. remove the blueprints from (or comment out to save for examples)
+
+    - currently these are at line 37
+
+        from .api import teachers, students
+        app.register_blueprint(teachers.bp)
+        app.register_blueprint(students.bp)
+
+4. Remove the `student.py` and `teacher.py`
+
+5. remove the models from the src\models.py
+
+    - everything after the `db = SQLAlchemy()`
+
+6. Reverse all these steps, to add your new api code
+
+    1. Add your classes to the models 
+    2. Add routes in the `api` directory
+    3. import and register the blueprints defined in the route files
+    4. run `pipenv run flask db migrate`
+    5. run `pipenv run flask db upgrade`
+    6. run `pipenv flask run --reload --debugger`
+    
