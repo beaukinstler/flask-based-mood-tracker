@@ -61,5 +61,32 @@
                 // "-s",
             ]
         },
+        {
+            "name": "pytest unit",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "args": [
+                "-v",
+                // "-k test_basics"
+                "-m unit"
+                // "--pdb"
+                // "-s",
+            ]
+        },
+        {
+            "name": "pytest verify basics",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "args": [
+                "-v",
+                "-k test_basics"
+                // "--pdb"
+                // "-s",
+            ]
+        },
     ]
 }
