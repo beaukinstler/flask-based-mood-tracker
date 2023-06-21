@@ -31,7 +31,7 @@ def client(app):
     with app.test_client() as client:
         yield client
 
-
+@pytest.mark.unit
 def test_database(app, client):
     # Insert test data into the database
     # You can customize this based on your models and data structure
