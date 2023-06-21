@@ -2,13 +2,14 @@
 
 ## model
 
-I'm creating this as a recap of the basics learned in a recent session.
+I'm creating this based on my 
+example app, which I built to recap of the basics learned in a recent training session.
 
-The model is esseitnally a Teacher/Student database, with a linking table
+The model in the example was a Teacher/Student database, with a linking table
 for the relationships, including a grade in the linking table.
 
-Since a there can be more than on class taken, the linking table has it's
-own id as well, that is part of the three-column primary key.
+I'm leaving this README change to document that the base of the app was built on that 
+small project. 
 
 ## config
 
