@@ -16,7 +16,7 @@ def index():
 
 @bp.route("", methods=['POST'])
 def create():
-    if 'name' not in request.json:
+    if 'description' not in request.json:
         return abort(400)
 
     # name mood

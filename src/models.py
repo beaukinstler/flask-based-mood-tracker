@@ -1,6 +1,6 @@
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Index
+# from sqlalchemy import Index
 
 
 db = SQLAlchemy()

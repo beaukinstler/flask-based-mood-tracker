@@ -2,16 +2,20 @@
 this file will be imported by the __init__.py in the same directory
 It will first try to read from the environment variables, so
 `export SECRET_KEY='yourkey` would override the settings below.
-Also `export DATABASE_URL='postgresql://usernam:password@database.example.com:5432/your_db'`
+Also `export DATABASE_URL='postgresql://usernam:password@database.example.com
+        :5432/your_db'`
 
 NOTE: you could also do something like this, having more environment variables/
 
-SQLALCHEMY_DATABASE_URI = 
-        f"postgresql://{os.environ['DATABASE_USERNAME']}:{os.environ['DATABASE_PASSWORD']}@{os.environ['DATABASE_HOST']}:{os.environ['DATABASE_PORT']}/{os.environ['DATABASE_NAME']}"
+SQLALCHEMY_DATABASE_URI =
+        f"postgresql://{os.environ['DATABASE_USERNAME']}:
+            {os.environ['DATABASE_PASSWORD']}@{os.environ['DATABASE_HOST']}
+            :{os.environ['DATABASE_PORT']}/{os.environ['DATABASE_NAME']}"
 
-Below, I do a variation. 
+Below, I do a variation.
 
-NOTE: this could also be created as on object, and read in the __init__.py  with 
+NOTE: this could also be created as on object, and read in the
+     __init__.py  with
     `app.config.from_object(Config)
 
 """
@@ -29,7 +33,8 @@ if DATABASE_PASSWORD:
 else:
     db_user = DATABASE_USERNAME
 
-database_url_string = f"postgresql://{db_user}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+database_url_string = \
+    f"postgresql://{db_user}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
 
 # put it all together
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'my-secret-key'

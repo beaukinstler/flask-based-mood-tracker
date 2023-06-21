@@ -22,7 +22,8 @@ def create_app(test_config=None):
         app.config.from_pyfile('../config.py', silent=True)
     else:
         # load the test config if passed in
-        app.config.from_mapping(test_config)
+        # app.config.from_mapping(test_config)
+        app.config.from_pyfile(test_config, silent=True)
 
     # ensure the instance folder exists
     try:
@@ -43,6 +44,8 @@ def create_app(test_config=None):
     # app.register_blueprint(students.bp)
 
     from .api import moods
+    from .tips import sqla
     app.register_blueprint(moods.bp)
+    app.register_blueprint(sqla.bp_sqla)
 
     return app
