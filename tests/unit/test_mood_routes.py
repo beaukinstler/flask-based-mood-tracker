@@ -6,7 +6,7 @@ from src.models import db, Mood
 
 
 
-@pytest.mark.skip
+@pytest.mark.unit
 def test_hotest_moods_get_page(testclient):
     """
     GIVEN a Flask application configured for testing via a fixture
@@ -16,7 +16,7 @@ def test_hotest_moods_get_page(testclient):
 
 
     # Create a test client using the Flask application configured for testing
-    with testclient() as test_client:
-        response = test_client.get('/moods')
-        assert response.status_code == 200
+    
+    response = testclient.get('/moods')
+    assert response.status_code == 200
 
