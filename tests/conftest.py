@@ -11,22 +11,28 @@ https://johncox-38620.medium.com/creating-a-test-database-pytest-sqlalchemy-9735
 
 import pytest
 from src import create_app
+from src.models import db
 
 
 @pytest.fixture()
 def app():
-    test_config = ".\\tests\\testing_config.py"
+    test_config = "..\\tests\\testing_config.py"
     app = create_app(test_config)
     app.config.update({
         "TESTING": True,
         'SERVER_NAME': 'localhost:5000'
     })
 
-    # other setup can go here
-    app.testing = True
-    yield app
 
-    # clean up / reset resources here
+    # Initialize the database
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
+
+        yield app
+
+        # Teardown - Drop all database tables
+        db.drop_all()
 
 
 @pytest.fixture()

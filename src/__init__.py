@@ -44,8 +44,6 @@ def create_app(test_config=None):
     # app.register_blueprint(students.bp)
 
     from .api import moods
-    from .tips import sqla
     app.register_blueprint(moods.bp)
-    app.register_blueprint(sqla.bp_sqla)
 
     return app

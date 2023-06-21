@@ -4,7 +4,7 @@ from src.models import db, Mood
 
 
 @pytest.fixture
-def app():
+def test_app():
     # Create a test Flask app instance
     app = Flask(__name__)
     app.config.from_mapping(
@@ -26,13 +26,38 @@ def app():
 
 
 @pytest.fixture
-def client(app):
+def client(test_app):
     # Create a test client using the app fixture
-    with app.test_client() as client:
+    with test_app.test_client() as client:
         yield client
 
 @pytest.mark.unit
-def test_database(app, client):
+def test_database(test_app, client):
+    """
+    GIVEN a Flask application configured for in this test file for testing via a fixture
+    WHEN creating a Mood instance in the app context and commiting to datbase with "happy" as the data
+    THEN the response of the query of the database will have that matching data in it's 'description'
+    """
+
+    with test_app.app_context():
+        # Example: Insert a user into the database
+        mood_data = 'happy'
+        mood = Mood(mood_data)
+        db.session.add(mood)
+        db.session.commit()
+
+        # Make assertions to verify the data insertion
+        mood = Mood.query.get(1)
+        assert mood.description == 'happy'
+
+    # Roll back the changes to the database
+    with test_app.app_context():
+        db.session.rollback()
+
+    # Make assertions to verify the database rollback
+@pytest.mark.fixture
+@pytest.mark.unit
+def test_database_with_confest_fixture(app):
     # Insert test data into the database
     # You can customize this based on your models and data structure
     with app.app_context():
