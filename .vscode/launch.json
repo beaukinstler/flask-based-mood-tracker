@@ -76,6 +76,20 @@
             ]
         },
         {
+            "name": "pytest fixtures",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "args": [
+                "-v",
+                // "-k test_basics"
+                "-m fixture"
+                // "--pdb"
+                // "-s",
+            ]
+        },
+        {
             "name": "pytest verify basics",
             "type": "python",
             "request": "launch",
