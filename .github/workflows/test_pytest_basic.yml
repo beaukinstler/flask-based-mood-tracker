@@ -51,4 +51,6 @@ jobs:
       - name: Run pytest -v -k basic
         run: |
           echo "Running test"
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
           python -m pytest -v -k basic
