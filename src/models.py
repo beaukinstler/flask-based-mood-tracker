@@ -28,6 +28,10 @@ class Mood(db.Model):
         }
         return response
 
+    def update(self, description):
+        self.description = description
+        db.session.commit()
+
 
 #####
 # Examples of many to many

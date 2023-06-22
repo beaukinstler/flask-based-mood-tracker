@@ -62,6 +62,18 @@
             ]
         },
         {
+            "name": "pytest suppress warnings",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "args": [
+                "-v",
+                "--disable-warnings"
+                // "-s",
+            ]
+        },
+        {
             "name": "pytest unit",
             "type": "python",
             "request": "launch",
