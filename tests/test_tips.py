@@ -3,5 +3,5 @@ import pytest
 
 def test_tips(testclient):
 
-    response, status = testclient.get()
+    response = testclient.get()
     assert response is not None
