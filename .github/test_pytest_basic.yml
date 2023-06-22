@@ -7,9 +7,11 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - main
+      - dev
 
   # Allow triggering this workflow manually from the Actions tab
   workflow_dispatch:
