@@ -24,14 +24,32 @@ class Mood(db.Model):
 
     def serialize(self):
         response = {
-            "id": f"{self.id}",
-            "description": f"{self.description}"
+            "mood_id": f"{self.id}",
+            "mood_description": f"{self.description}"
         }
         return response
 
     def update(self, description):
         self.description = description
         db.session.commit()
+
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    email = db.Column(db.Text, nullable=False)
+    password = db.Column(db.Text, nullable=False)
+
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
+
+    def serialize(self):
+        response = {
+            "user_id": f"{self.id}",
+            "user_email": f"{self.email}"
+        }
+        return response
 
 
 #####

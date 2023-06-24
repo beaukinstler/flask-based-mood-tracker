@@ -1,57 +1,24 @@
 import pytest
 from flask import Flask
-from src.models import db, Mood
-import json
+from src.models import db, User
+
 
 @pytest.mark.users
 @pytest.mark.unit
-def test_users_get_page(testclient):
+def test_model_update(testclient):
     """
-    given: a GET to url /users
-
-    when: when the user is authorized to access that url
-
-    then: get a response with status 200
-
-    """
-    response = testclient.get('/users')
-    assert response.status_code == 200
-
-    """
-    given: a GET to url /users
-
-    when: when the user is authorized to access that url
-
-    then: get a response with all the user ids and their mood totals
-
-    """
-    assert response.text.contains("user_id") == False
-
-
-
-    """
-    given: a post to url /users/create
-
-    when: with body {'email':<valid email format>, ‘password’:”some string”
-
-    then: a new user is added to the the database and the response includes a user ID
+    GIVEN a Flask application configured for in this test file for testing via a fixture
+    WHEN creating a User instance in the app context and commiting to datbase with email and password
+    THEN the new user object will have and id property == 1
     """
 
+    # Example: Insert a user into the database
+    user_email = 'user@example.com'
+    user_password = 'password'
+    user = User(email=user_email, password=user_password)
+    db.session.add(user)
+    db.session.commit()
 
-
-    """
-    given: a post to url /users/create
-
-    when: with body {'email':not valid, ‘password’:”some string”
-
-    then: 404 
-    """
-
-
-    """
-    given: a post to url /users/create
-
-    when: with body {} or missing
-
-    then: 404
-    """
+    # Make assertions to verify the data insertion
+    user_from_db = User.query.get(1)
+    assert user_from_db.id == 1

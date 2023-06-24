@@ -114,5 +114,32 @@
                 // "-s",
             ]
         },
+        {
+            "name": "pytest users",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "args": [
+                "-v",
+                "-m users"
+                // "--pdb"
+                // "-s",
+            ]
+        },
+        {
+            "name": "pytest user model",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "args": [
+                "-v",
+                "--disable-warnings",
+                "tests/unit/test_user_model.py",
+                // "--pdb"
+                // "-s",
+            ]
+        },
     ]
 }

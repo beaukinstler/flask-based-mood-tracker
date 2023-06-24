@@ -43,7 +43,7 @@ def create_app(test_config=None):
     # app.register_blueprint(teachers.bp)
     # app.register_blueprint(students.bp)
 
-    from .api import moods
+    from .api import moods, users
     app.register_blueprint(moods.bp)
-
+    app.register_blueprint(users.bp)
     return app
