@@ -54,10 +54,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Run pytest basic
-        run: |
-          python -m pytest -m basic --disable-warnings
-
       - name: Run pytest full
         run: |
           python -m pytest --disable-warnings
