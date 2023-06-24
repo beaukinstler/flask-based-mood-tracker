@@ -13,6 +13,7 @@ class Mood(db.Model):
 
     def __init__(self, description):
         self.description = description
+        db.session.add(self)
         db.session.commit()
 
     def __str__(self):

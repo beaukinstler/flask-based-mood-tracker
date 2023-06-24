@@ -19,8 +19,6 @@ def create():
     if 'description' not in request.json:
         return abort(400)
     mood = Mood(request.json['description'])
-    db.session.add(mood)
-    db.session.commit()
     return jsonify(mood.serialize())
 
 
