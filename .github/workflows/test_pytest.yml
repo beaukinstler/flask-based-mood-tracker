@@ -1,16 +1,14 @@
-name: Hello Test Python Versions Copy Paste
+name: Pytest Workflow
 
 # Set up how the workflow is triggered
 on:
   # Trigger the workflow on push or pull request events on the main branch
   push:
     branches:
-      - main
       - dev
   pull_request:
     branches:
       - main
-      - dev
 
   # Allow triggering this workflow manually from the Actions tab
   workflow_dispatch:
@@ -53,4 +51,7 @@ jobs:
           echo "Running test"
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+
+      - name: Run pytest full
+        run: |
           python -m pytest --disable-warnings
