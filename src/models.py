@@ -81,10 +81,16 @@ class User(db.Model):
         cascade='all, delete',
         back_populates="user"
     )
+    is_active = db.Column(db.Boolean, nullable=False, default=False)
+    is_anonymous = db.Column(db.Boolean, nullable=False, default=False)
+    is_authenticated = False
 
     def __init__(self, email, password):
         self.email = email
         self.password = password
+        self.is_active = False
+        self.is_anonymous = False
+        self.is_authenticated = False
 
     def __eq__(self, other):
         return self.email == other.email and self.id == other.id
@@ -98,6 +104,9 @@ class User(db.Model):
 
     def get_moods(self):
         return [mood.serialize for mood in self.moods]
+
+    def get_id(self):
+        return "0" if self.id is None else str(self.id)
 
 
 #####
