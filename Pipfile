@@ -6,13 +6,17 @@ name = "pypi"
 [packages]
 alembic = "==1.6.5"
 faker = "==8.5.1"
-flask = "==2.0.1"
+flask = "*"
 flask-migrate = "==3.0.1"
 flask-sqlalchemy = "==2.5.1"
 psycopg2-binary = "==2.9.1"
 sqlalchemy = "==1.4.17"
+pytest-flask = "*"
+pytest = "*"
+python-dotenv = "*"
 
 [dev-packages]
+flake8 = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.11"

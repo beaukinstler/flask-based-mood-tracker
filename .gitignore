@@ -20,7 +20,7 @@ build/
 *.sqlite
 
 # Ignore IDE and editor files
-
+.venv/
 
 .vscode/*
 .idea/

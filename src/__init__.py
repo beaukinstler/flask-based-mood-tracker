@@ -22,7 +22,8 @@ def create_app(test_config=None):
         app.config.from_pyfile('../config.py', silent=True)
     else:
         # load the test config if passed in
-        app.config.from_mapping(test_config)
+        # app.config.from_mapping(test_config)
+        app.config.from_pyfile(test_config, silent=True)
 
     # ensure the instance folder exists
     try:
@@ -34,8 +35,15 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate = Migrate(app, db)
 
-    from .api import teachers, students
-    app.register_blueprint(teachers.bp)
-    app.register_blueprint(students.bp)
+
+#######
+# Example of importing and registering the bluprints from the api folder
+#######
+    # from .api import teachers, students
+    # app.register_blueprint(teachers.bp)
+    # app.register_blueprint(students.bp)
+
+    from .api import moods
+    app.register_blueprint(moods.bp)
 
     return app
