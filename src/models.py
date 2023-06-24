@@ -1,15 +1,52 @@
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 # from sqlalchemy import Index
+import datetime
 
 
 db = SQLAlchemy()
+
+
+class UserMoodLog(db.Model):
+    """
+    found example here https://gist.github.com/asyd/3cff61ed09eabe187d3fbec2c8a3ee39
+    but it's for a class, to guessed on the syntax.
+    """
+
+    __tablename__ = 'users_moods'
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column('user_id', db.Integer, db.ForeignKey(
+        'users.id'), primary_key=False)
+    mood_id = db.Column('mood_id', db.Integer, db.ForeignKey(
+        'moods.id'), primary_key=False)
+    created_at = db.Column(db.DateTime(timezone=True),
+                           default=datetime.datetime.utcnow)
+    note = db.Column("notes", db.Text, nullable=True)
+    user = db.relationship('User', back_populates="moods")
+    mood = db.relationship('Mood', back_populates="users")
+
+    def __init__(self, note):
+        if not None == note and note != "":
+            self.note = note
+
+    # for sorting based on info here https://portingguide.readthedocs.io/en/latest/comparisons.html
+    def __eq__(self, other):
+        return self.created_at == other.created_at and self.user == other.user
+
+    def __lt__(self, other):
+        return self.created_at < other.created_at and self.user == other.user
 
 
 class Mood(db.Model):
     __tablename__ = 'moods'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.Text, nullable=False)
+    users = db.relationship(
+        'UserMoodLog',
+        cascade='all, delete',
+        back_populates="mood"
+    )
 
     def __init__(self, description):
         self.description = description
@@ -39,10 +76,18 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.Text, nullable=False)
     password = db.Column(db.Text, nullable=False)
+    moods = db.relationship(
+        'UserMoodLog',
+        cascade='all, delete',
+        back_populates="user"
+    )
 
     def __init__(self, email, password):
         self.email = email
         self.password = password
+
+    def __eq__(self, other):
+        return self.email == other.email and self.id == other.id
 
     def serialize(self):
         response = {
@@ -50,6 +95,9 @@ class User(db.Model):
             "user_email": f"{self.email}"
         }
         return response
+
+    def get_moods(self):
+        return [mood.serialize for mood in self.moods]
 
 
 #####
