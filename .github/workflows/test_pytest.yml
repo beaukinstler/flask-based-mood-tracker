@@ -1,4 +1,4 @@
-name: Hello Test Python Versions Copy Paste
+name: Pytest Workflow
 
 # Set up how the workflow is triggered
 on:
@@ -55,7 +55,9 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Run pytest basic
-        run: python -m pytest -m basic
+        run: |
+          python -m pytest -m basic
 
       - name: Run pytest suppress warnings
-        run: python -m pytest --disable-warnings
+        run: |
+          python -m pytest --disable-warnings
