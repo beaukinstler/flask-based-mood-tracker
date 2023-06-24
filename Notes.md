@@ -10,7 +10,7 @@
 4. Encrypted notes, with front end javascript encryption keys
 	5. Also, notes become their own table, but linked to the most recent allowed note
 5. Visualization: Data graphs for trends in both media and user moods
-6. 
+6. Make sure the log entryies are indexed by user and created_at for quick search for last mood entry
 
 
 
@@ -72,6 +72,12 @@ For API access, I will probably want to to implment a jwt soluition, like I did 
 				from the token
 		```
 
+
+
+
+## Many to many log table
+
+Based on the SQLAlchemy docs, I've decided to use [Association Object](https://docs.sqlalchemy.org/en/14/orm/basic_relationships.html#association-object) as my model for linking the two tables.
 
 
 
