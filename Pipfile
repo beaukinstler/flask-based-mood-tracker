@@ -15,6 +15,7 @@ pytest-flask = "*"
 pytest = "*"
 python-dotenv = "*"
 flask-login = "*"
+passlib = "*"
 
 [dev-packages]
 flake8 = "*"
