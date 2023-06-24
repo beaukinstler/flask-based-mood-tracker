@@ -50,6 +50,17 @@
 				1. Respond with 40X and redirect to a Edit page that uses the PATCH
 			4. Else:
 				1. Log the mood and time in the database
+	2. Mood lists
+		1. Endpoints
+			1. /moods
+				- GET: List all moods
+				- POST: create a mood. body needs json. [{"description":"happy"}]
+				- PATCH/PUT: update the description of the moods
+
+			2. /moods/{descirption}
+				- GET: Get total by date of moods based on description
+				
+
 3.  Provide a description of the database tables required for your application, including column names, data types, constraints, and foreign keys. Include your database name. You can optionally include an ER diagram. 
 
 -   You are not required to start nor submit any code this week. However, when you do begin working on the code and containers, keep these tips in mind:

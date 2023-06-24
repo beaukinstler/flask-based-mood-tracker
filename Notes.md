@@ -11,3 +11,67 @@
 	5. Also, notes become their own table, but linked to the most recent allowed note
 5. Visualization: Data graphs for trends in both media and user moods
 6. 
+
+
+
+# User authentication
+1. https://www.freecodecamp.org/news/how-to-authenticate-users-in-flask/
+2. https://pypi.org/project/Flask-Login/
+
+### Steps
+
+- `pip install Flask-Login`
+
+GUESS: I think I'll add the below to the `src/__init__.py`
+
+```
+import flask_login
+
+login_manager = flask_login.LoginManager()
+
+login_manager.init_app(app)
+```
+
+### API token
+For API access, I will probably want to to implment a jwt soluition, like I did in another project.
+[my item catalog approach](https://github.com/beaukinstler/fswd-item-catalog/blob/master/db_setup.py#L19)
+
+1. Create secret key
+	https://github.com/beaukinstler/fswd-item-catalog/blob/a96eb4767903ad5a8282d215555c33127cdb6640/db_setup.py#L25
+
+2. In the User class, implement the secret_key global variable and the user functions:
+	- [Global secret_key](https://github.com/beaukinstler/fswd-item-catalog/blob/a96eb4767903ad5a8282d215555c33127cdb6640/db_setup.py#L25)
+	- [User.generate_auth_token](https://github.com/beaukinstler/fswd-item-catalog/blob/a96eb4767903ad5a8282d215555c33127cdb6640/db_setup.py#L43C9-L43C24)
+		```
+		"""
+		Use jwt.encode
+		to encrypt a token, and the secret key created global
+		in the class.
+
+		Parameters:
+			self
+
+			[optional]
+			expiraexpiration: integer, seconds until expires
+
+		Returns: encrypted token, containing id of the user
+		"""
+		```
+	- [@staticmethod verify_auth_token(token)](https://github.com/beaukinstler/fswd-item-catalog/blob/a96eb4767903ad5a8282d215555c33127cdb6640/db_setup.py#L79C14-L79C14)
+
+
+		```
+		Purpose: Decrypt a token and check for the user id.
+				Exceptions are thrown for expired tokens,
+				and for BadSignatures. If these exceptions
+				are found, "None" is returned
+
+		Params: A token created with jwt.encode
+
+		Returns: a user_id if successfully decrypted
+				from the token
+		```
+
+
+
+
