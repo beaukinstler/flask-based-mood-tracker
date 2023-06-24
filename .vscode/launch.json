@@ -141,5 +141,19 @@
                 // "-s",
             ]
         },
+        {
+            "name": "pytest auth",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "args": [
+                "-v",
+                // "-k test_basics"
+                "-m auth"
+                // "--pdb"
+                // "-s",
+            ]
+        },
     ]
 }

@@ -14,6 +14,7 @@ sqlalchemy = "==1.4.17"
 pytest-flask = "*"
 pytest = "*"
 python-dotenv = "*"
+flask-login = "*"
 
 [dev-packages]
 flake8 = "*"
