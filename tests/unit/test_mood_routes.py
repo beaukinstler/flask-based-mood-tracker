@@ -31,4 +31,4 @@ def test_moods_post_create(testclient):
     response = testclient.post('/moods', json=data)
     dict_data = json.loads(response.text)
     assert response.status_code == 200
-    assert str(dict_data["id"]) == "1"
+    assert str(dict_data["mood_id"]) == "1"
