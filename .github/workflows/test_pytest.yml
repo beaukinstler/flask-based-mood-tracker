@@ -53,4 +53,9 @@ jobs:
           echo "Running test"
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          python -m pytest --disable-warnings
+
+      - name: Run pytest basic
+        run: python -m pytest -m basic
+
+      - name: Run pytest suppress warnings
+        run: python -m pytest --disable-warnings
