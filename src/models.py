@@ -1,8 +1,10 @@
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
+from src import login_manager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 # from sqlalchemy import Index
 import datetime
+from src.security import pwd_context
 
 
 db = SQLAlchemy()
@@ -81,16 +83,38 @@ class User(db.Model):
         cascade='all, delete',
         back_populates="user"
     )
-    is_active = db.Column(db.Boolean, nullable=False, default=False)
-    is_anonymous = db.Column(db.Boolean, nullable=False, default=False)
-    is_authenticated = False
+    _is_active = False
+    _is_anonymous = True
+    _is_authenticated = False
+
+    # properties for flask_login
+    @property
+    def is_active(self):
+        return self._is_active
+
+    @is_active.setter
+    def is_active(self, new_active):
+        self._is_active = new_active
+
+    @property
+    def is_authenticated(self):
+        return self._is_authenticated
+
+    @is_authenticated.setter
+    def is_authenticated(self, new_authenticated):
+        self._is_authenticated = new_authenticated
+
+    @property
+    def is_anonymous(self):
+        return self._is_anonymous
+
+    @is_anonymous.setter
+    def is_anonymous(self, new_anis_anonymous):
+        self._is_anonymous = new_anis_anonymous
 
     def __init__(self, email, password):
         self.email = email
-        self.password = password
-        self.is_active = False
-        self.is_anonymous = False
-        self.is_authenticated = False
+        self.password = pwd_context.hash(password)
 
     def __eq__(self, other):
         return self.email == other.email and self.id == other.id
@@ -106,7 +130,40 @@ class User(db.Model):
         return [mood.serialize for mood in self.moods]
 
     def get_id(self):
-        return "0" if self.id is None else str(self.id)
+        """Return the email address to satisfy Flask-Login's requirements."""
+        return self.email
+
+    def verify_password(self, passwrd_given):
+        return pwd_context.verify_and_update(str(passwrd_given), self.password)
+
+    def login(self, password):
+        if self.verify_password(password):
+            self._is_active = True
+            self._is_authenticated = True
+            self._is_anonymous = False
+
+        else:
+            self._is_authenticated = False
+            self._is_active = False
+
+    def logout(self):
+
+        self._is_authenticated = False
+        self.is_active = False
+
+
+# user loader for the Flask-Login module
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    try:
+        found_user = User.query.get(1)
+    except:
+        found_user = None
+    if None is not found_user:
+        result = found_user
+    return result
 
 
 #####
