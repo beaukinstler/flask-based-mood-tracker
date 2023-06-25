@@ -1,11 +1,14 @@
 from flask import Blueprint, jsonify, abort, request
 from ..models import User, db
 from sqlalchemy.exc import IntegrityError
+from flask_login import login_required
+
 
 bp = Blueprint("users", __name__, url_prefix="/users")
 
 
 @bp.route("", methods=['GET'])
+@login_required
 def index():
     users = User.query.all()
     result = []
