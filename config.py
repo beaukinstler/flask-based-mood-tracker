@@ -37,7 +37,7 @@ database_url_string = \
     f"postgresql://{db_user}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
 
 # put it all together
-SECRET_KEY = os.environ.get('SECRET_KEY') or 'my-secret-key'
+SECRET_KEY = os.environ.get('SECRET_KEY') or 'Ample-Surplus-Error-Flashcard1'
 SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or database_url_string
 
 # other settings from examples.

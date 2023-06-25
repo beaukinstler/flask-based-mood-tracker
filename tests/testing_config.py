@@ -33,7 +33,8 @@ DATABASE_NAME = os.environ.get('TEST_DATABASE_NAME') or 'test_moody'
 database_url_string = "sqlite:///test.db"
 
 # put it all together
-SECRET_KEY = os.environ.get('TEST_SECRET_KEY') or 'my-secret-key'
+SECRET_KEY = os.environ.get(
+    'TEST_SECRET_KEY') or 'Ample-Surplus-Error-Flashcard1'
 SQLALCHEMY_DATABASE_URI = os.environ.get(
     'TEST_DATABASE_URL') or database_url_string
 
