@@ -1,7 +1,18 @@
 import pytest
 from flask import Flask
-from src.models import db, User
+from src.models import db, User, load_user
 import json
+
+
+@pytest.mark.users
+@pytest.mark.unit
+def test_users_load_user_login_manager(testclient):
+    user = User('test@example.com', 'password')
+    db.session.add(user)
+    db.session.commit()
+    loaded_user = load_user(1)
+
+
 
 @pytest.mark.users
 @pytest.mark.unit
@@ -15,7 +26,7 @@ def test_users_get_page_no_users(testclient):
 
     """
     response = testclient.get('/users')
-    assert response.status_code == 200
+    assert response.status_code == 302
 
     """
     given: a GET to url /users
@@ -26,7 +37,7 @@ def test_users_get_page_no_users(testclient):
 
     """
     response = testclient.get('/users')
-    assert response.status_code == 200
+    assert response.status_code == 302
 
     """
     given: a GET to url /users
@@ -38,6 +49,7 @@ def test_users_get_page_no_users(testclient):
     """
     assert response.text.find("user_id") < 0
 
+@pytest.mark.auth
 @pytest.mark.users
 @pytest.mark.unit
 def test_users_get_page_with_users(testclient):
@@ -49,9 +61,11 @@ def test_users_get_page_with_users(testclient):
     then: get a response with status 200
 
     """
-    db.session.add(User('test@example.com','password'))
+    username= 'test@example.com'
+    password = 'password'
+    db.session.add(User(username,password))
     db.session.commit()
-
+    response = testclient.post('/auth/login',json={"username":username,"password":password})
     response = testclient.get('/users')
     assert response.status_code == 200
 
@@ -67,7 +81,6 @@ def test_users_get_page_with_users(testclient):
     response_dict = json.loads(response.text)
     assert str(response_dict[0]["user_id"]) == "1"
 
-@pytest.mark.skip
 @pytest.mark.users
 @pytest.mark.unit
 def test_users_get_page_not_authorized(testclient):
@@ -80,7 +93,7 @@ def test_users_get_page_not_authorized(testclient):
 
     """
     response = testclient.get('/users')
-    assert response.status_code == 300
+    assert response.status_code == 302
 
 
 

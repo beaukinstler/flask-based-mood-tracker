@@ -155,5 +155,19 @@
                 // "-s",
             ]
         },
+        {
+            "name": "pytest focus",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "args": [
+                "-v",
+                // "-k test_basics"
+                "-m focus"
+                // "--pdb"
+                // "-s",
+            ]
+        },
     ]
 }
