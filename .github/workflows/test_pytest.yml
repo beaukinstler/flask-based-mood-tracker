@@ -54,4 +54,4 @@ jobs:
 
       - name: Run pytest full
         run: |
-          python -m pytest --disable-warnings
+          python -m pytest -v
