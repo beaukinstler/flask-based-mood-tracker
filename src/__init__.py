@@ -1,12 +1,19 @@
+
 import os
 from flask import Flask
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
 # https://flask.palletsprojects.com/en/2.0.x/patterns/appfactories/
 
 
 from flask_login import LoginManager
+
+
+db = SQLAlchemy()
+migrate = Migrate()
 login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
 
 
 def create_app(test_config=None):
@@ -23,24 +30,25 @@ def create_app(test_config=None):
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('../config.py', silent=True)
+        app.config["SECRET_KEY"] = "sdlfkajwdkj90234uofdkvnv0e89h9028"
+        app.config["WTF_CSRF_SECRET_KEY"] = "sdlfkajwdkj90234uofdkvnv0e89h9028"
     else:
         # load the test config if passed in
         # app.config.from_mapping(test_config)
         app.config.from_pyfile(test_config, silent=True)
+        app.config["SECRET_KEY"] = "sdlfkajwdkj90234uofdkvnv0e89h9028"
+        app.config["WTF_CSRF_SECRET_KEY"] = "sdlfkajwdkj90234uofdkvnv0e89h9028"
+
+    db.init_app(app)
+    login_manager.init_app(app)
+
+    migrate.init_app(app, db)
 
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
-
-    from .models import db
-    db.init_app(app)
-    migrate = Migrate(app, db)
-
-    # initialize login managers with app
-    login_manager.init_app(app)
-    login_manager.login_view = 'auth.login'
 
 
 #######

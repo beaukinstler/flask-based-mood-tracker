@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, abort, request
-from ..models import User, db
+from ..models import User
+from src import db
 from sqlalchemy.exc import IntegrityError
 from flask_login import login_required
 

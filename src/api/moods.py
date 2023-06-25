@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, abort, request
-from ..models import Mood, db
+from ..models import Mood
 from sqlalchemy.exc import IntegrityError
+from src import db
 
 bp = Blueprint("moods", __name__, url_prefix="/moods")
 

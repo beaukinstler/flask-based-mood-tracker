@@ -5,9 +5,7 @@ from sqlalchemy.sql import func
 # from sqlalchemy import Index
 import datetime
 from src.security import pwd_context
-
-
-db = SQLAlchemy()
+from src import db
 
 
 class UserMoodLog(db.Model):

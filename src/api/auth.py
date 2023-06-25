@@ -5,7 +5,8 @@ from flask import redirect as flask_redirect, request as flask_request, render_t
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired
-from ..models import User, db
+from ..models import User
+from src import db
 from sqlalchemy.exc import IntegrityError
 from flask_login import login_user, current_user
 from werkzeug.urls import url_parse

@@ -45,3 +45,4 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 
 FLASK_ENV = 'development'
+WTF_CSRF_SECRET_KEY = 'Ample-Surplus-Error-Flashcard1'

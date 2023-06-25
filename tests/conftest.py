@@ -23,7 +23,6 @@ def app():
         'SERVER_NAME': 'localhost:5000'
     })
 
-
     # Initialize the database
     db.init_app(app)
     with app.app_context():
@@ -37,11 +36,6 @@ def app():
 
 @pytest.fixture()
 def testclient(app):
-
-    with app.test_client() as client:
-        yield client
-
-
-@pytest.fixture()
-def runner(app):
-    return app.test_cli_runner()
+    return app.test_client()
+    # with app.test_client() as client:
+    #     yield
