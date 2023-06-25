@@ -5,9 +5,12 @@ from flask_migrate import Migrate
 # https://flask.palletsprojects.com/en/2.0.x/patterns/appfactories/
 
 
+from flask_login import LoginManager
+login_manager = LoginManager()
+
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
-
     # commenting the below out to read form a config.py file, instead
 
     # app.config.from_mapping(
@@ -35,6 +38,10 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate = Migrate(app, db)
 
+    # initialize login managers with app
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
+
 
 #######
 # Example of importing and registering the bluprints from the api folder
@@ -43,7 +50,10 @@ def create_app(test_config=None):
     # app.register_blueprint(teachers.bp)
     # app.register_blueprint(students.bp)
 
-    from .api import moods, users
+    from .api import moods, users, auth
+    from .main import main
     app.register_blueprint(moods.bp)
     app.register_blueprint(users.bp)
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(main)
     return app
