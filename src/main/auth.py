@@ -72,7 +72,7 @@ def register():
 
         flash(error)
 
-    return flask_render_template('auth/register.html')
+    return flask_render_template('register.html')
 
 
 @bp.route('/logout')
