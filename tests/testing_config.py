@@ -34,7 +34,7 @@ database_url_string = "sqlite:///test.db"
 
 # put it all together
 SECRET_KEY = os.environ.get(
-    'TEST_SECRET_KEY') or 'Ample-Surplus-Error-Flashcard1'
+    'TEST_SECRET_KEY') or 'Do-not-use-this'
 SQLALCHEMY_DATABASE_URI = os.environ.get(
     'TEST_DATABASE_URL') or database_url_string
 
@@ -43,5 +43,4 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 
 FLASK_ENV = 'development'
-WTF_CSRF_SECRET_KEY = 'Ample-Surplus-Error-Flashcard1'
 TESTING = True
