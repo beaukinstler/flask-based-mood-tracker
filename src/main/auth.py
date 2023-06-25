@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_login import login_user, current_user
 from werkzeug.urls import url_parse
 
-bp = Blueprint("api_auth", __name__, url_prefix="/api.v1/auth")
+bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
 class LoginForm(FlaskForm):

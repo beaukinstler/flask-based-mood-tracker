@@ -1,11 +1,11 @@
 from flask import Blueprint, jsonify, abort, request
 from ..models import User
-from sqlalchemy.exc import IntegrityError
 from src import db
+from sqlalchemy.exc import IntegrityError
 from flask_login import login_required
 
 
-bp = Blueprint("api_users", __name__, url_prefix="/api.v1/users")
+bp = Blueprint("users", __name__, url_prefix="/users")
 
 
 @bp.route("", methods=['GET'])

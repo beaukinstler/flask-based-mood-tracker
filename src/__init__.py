@@ -58,10 +58,13 @@ def create_app(test_config=None):
     # app.register_blueprint(teachers.bp)
     # app.register_blueprint(students.bp)
 
-    from .api import moods, users, auth
-    from .main import main
+    from .api import moods as api_moods, users as api_users, auth as api_auth
+    from .main import main, users, moods, auth
     app.register_blueprint(moods.bp)
     app.register_blueprint(users.bp)
     app.register_blueprint(auth.bp)
+    app.register_blueprint(api_moods.bp)
+    app.register_blueprint(api_users.bp)
+    app.register_blueprint(api_auth.bp)
     app.register_blueprint(main)
     return app

@@ -3,7 +3,7 @@ from ..models import Mood
 from sqlalchemy.exc import IntegrityError
 from src import db
 
-bp = Blueprint("api_moods", __name__, url_prefix="/api.v1/moods")
+bp = Blueprint("moods", __name__, url_prefix="/moods")
 
 
 @bp.route("", methods=['GET'])
