@@ -29,12 +29,12 @@
             "env": {
                 "FLASK_ENV": "development",
                 "FLASK_APP": "wsgi.py",
-                "FLASK_DEBUG": "1"
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
             },
             "args": [
                 "run",
-                "--no-debugger",
-                // "--no-reload"
+                "--debug"
             ],
             "jinja": true,
             "justMyCode": true,
@@ -55,9 +55,7 @@
             "module": "pytest",
             "justMyCode": true,
             "args": [
-                "-v",
-                // "--pdb"
-                // "-s",
+                "-v"
             ]
         },
         {
@@ -69,7 +67,6 @@
             "args": [
                 "-v",
                 "--disable-warnings"
-                // "-s",
             ]
         },
         {
@@ -80,10 +77,7 @@
             "justMyCode": true,
             "args": [
                 "-v",
-                // "-k test_basics"
                 "-m unit"
-                // "--pdb"
-                // "-s",
             ]
         },
         {
@@ -94,10 +88,7 @@
             "justMyCode": true,
             "args": [
                 "-v",
-                // "-k test_basics"
                 "-m fixture"
-                // "--pdb"
-                // "-s",
             ]
         },
         {
@@ -109,8 +100,6 @@
             "args": [
                 "-v",
                 "-k test_basics"
-                // "--pdb"
-                // "-s",
             ]
         },
         {
@@ -122,8 +111,6 @@
             "args": [
                 "-v",
                 "-m users"
-                // "--pdb"
-                // "-s",
             ]
         },
         {
@@ -135,9 +122,7 @@
             "args": [
                 "-v",
                 "--disable-warnings",
-                "tests/unit/test_user_model.py",
-                // "--pdb"
-                // "-s",
+                "tests/unit/test_user_model.py"
             ]
         },
         {
@@ -148,10 +133,7 @@
             "justMyCode": true,
             "args": [
                 "-v",
-                // "-k test_basics"
                 "-m auth"
-                // "--pdb"
-                // "-s",
             ]
         },
         {
@@ -162,11 +144,23 @@
             "justMyCode": true,
             "args": [
                 "-v",
-                // "-k test_basics"
                 "-m focus"
-                // "--pdb"
-                // "-s",
             ]
         },
+        {
+            "name": "Docker: Python - Flask",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "python": {
+                "pathMappings": [
+                    {
+                        "localRoot": "${workspaceFolder}",
+                        "remoteRoot": "/app"
+                    }
+                ],
+                "projectType": "flask"
+            }
+        }
     ]
 }

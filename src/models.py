@@ -155,12 +155,12 @@ class User(db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
+    result = None
     try:
-        found_user = User.query.get(1)
+        found_user = User.query.filter_by(email=user_id).first()
     except:
         found_user = None
-    if None is not found_user:
-        result = found_user
+    result = found_user
     return result
 
 

@@ -15,6 +15,9 @@ migrate = Migrate()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 
+if os.environ.get('FLASK_ENV') == 'development':
+    test_config = "..\\tests\\testing_config.py"
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)

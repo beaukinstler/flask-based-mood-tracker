@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  moody_pg:
+    container_name: moody_pg_container
+    image: postgres:14.1-alpine3.15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGUSER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - "${PWD}/data/initdb/:/docker-entrypoint-initdb.d/"
+  moody_flask:
+    container_name: moody_flask_container
+    image: docker.io/bkin/moodyflask:latest
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: moody_pg
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5001:5000
+    depends_on:
+      - moody_pg
+networks:
+  default:
+    name: moody_net

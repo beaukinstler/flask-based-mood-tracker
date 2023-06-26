@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired
 from ..models import User
 from src import db
 from sqlalchemy.exc import IntegrityError
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user
 from werkzeug.urls import url_parse
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -26,9 +26,11 @@ def login():
     # see https://flask.palletsprojects.com/en/2.3.x/tutorial/views/ docs as well as
     # https://blog.pip.com/post/the-flask-mega-tutorial-part-v-user-logins/page/19
     # for my inspiration with all this
+    if current_user.is_authenticated:
+        next_page = url_for('users.index')
     form = LoginForm()
     # my valudate on submit isn't working. Added the POST check, at least for API
-    if form.validate_on_submit() or flask_request.method == 'POST':
+    if form.validate_on_submit():
         user = db.session.query(User).filter(
             User.email == form.data['username']).scalar()
         user.login(form.data['password'])
@@ -37,8 +39,8 @@ def login():
             return flask_redirect(url_for('auth.login'))
         else:
             flash('Logged in successfully.')
-            login_user(user)
-            return flask_redirect(url_for('main.index'))
+            login_user(user, remember=True)
+            return flask_redirect(url_for('users.index'))
 
         next_page = flask_request.args.get('next')
         if not next_page or url_parse(next_page).netloc != "":
@@ -77,4 +79,6 @@ def register():
 
 @bp.route('/logout')
 def logout():
+    current_user.logout()
+    logout_user()
     return 'Logout'
