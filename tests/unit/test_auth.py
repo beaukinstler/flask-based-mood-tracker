@@ -45,9 +45,9 @@ def test_flask_login_properties():
     user_password = 'password'
     user = User(email=user_email, password=user_password)
 
-    assert user.is_authenticated != True
-    assert user.is_active == False
-    assert user.is_anonymous == True
+    assert user.is_authenticated == True
+    assert user.is_active == True
+    assert user.is_anonymous == False
     # for the flask_login, i think they want the username
     assert user.get_id() == 'user@example.com'
 
