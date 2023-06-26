@@ -65,7 +65,7 @@ def test_users_get_page_with_users(testclient):
     password = 'password'
     db.session.add(User(username,password))
     db.session.commit()
-    response = testclient.post('/auth/login',json={"username":username,"password":password})
+    response = testclient.post('/auth/login',json={"username":username,"password":password,"remember_me":True,"submit":True, "csrf_token":"asyouwere"})
     response = testclient.get('/users')
     assert response.status_code == 200
 
@@ -79,7 +79,7 @@ def test_users_get_page_with_users(testclient):
     """
     assert response.text.find("user_id") > 0
     response_dict = json.loads(response.text)
-    assert str(response_dict[0]["user_id"]) == "1"
+    assert str(response_dict["user_id"]) == "1"
 
 @pytest.mark.users
 @pytest.mark.unit
