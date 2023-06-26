@@ -6,6 +6,7 @@ from sqlalchemy.sql import func
 import datetime
 from src.security import pwd_context
 from src import db
+from flask_login import current_user
 
 
 class UserMoodLog(db.Model):
@@ -81,9 +82,9 @@ class User(db.Model):
         cascade='all, delete',
         back_populates="user"
     )
-    _is_active = False
-    _is_anonymous = True
-    _is_authenticated = False
+    _is_active = True
+    _is_anonymous = False
+    _is_authenticated = True
 
     # properties for flask_login
     @property
@@ -158,6 +159,8 @@ def load_user(user_id):
     result = None
     try:
         found_user = User.query.filter_by(email=user_id).first()
+        if current_user == found_user:
+            found_user = current_user
     except:
         found_user = None
     result = found_user
