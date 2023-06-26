@@ -33,3 +33,6 @@ build/
 
 # Ignore .bak files
 *.bak
+
+# ignore kompose files
+*.yaml

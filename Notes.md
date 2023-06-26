@@ -81,3 +81,11 @@ Based on the SQLAlchemy docs, I've decided to use [Association Object](https://d
 
 
 
+### azure
+```
+az group create --name moody-flask --location eastus
+az aks create --resource-group moody-flask --name flaskcluster --node-count 1 --generate-ssh-keys
+az aks get-credentials --resource-group moody-flask --name flaskcluster
+kubectl get nodes
+
+```

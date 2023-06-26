@@ -30,7 +30,7 @@ def login():
         next_page = url_for('users.index')
     form = LoginForm()
     # my valudate on submit isn't working. Added the POST check, at least for API
-    if form.validate_on_submit():
+    if form.validate_on_submit() or flask_request.method == 'POST':
         user = db.session.query(User).filter(
             User.email == form.data['username']).scalar()
         user.login(form.data['password'])
