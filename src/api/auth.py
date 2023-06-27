@@ -26,11 +26,14 @@ def login():
     # see https://flask.palletsprojects.com/en/2.3.x/tutorial/views/ docs as well as
     # https://blog.pip.com/post/the-flask-mega-tutorial-part-v-user-logins/page/19
     # for my inspiration with all this
-    form = LoginForm()
+
     # my valudate on submit isn't working. Added the POST check, at least for API
-    if form.validate_on_submit() or flask_request.method == 'POST':
+    if flask_request.method == 'POST':
         user = db.session.query(User).filter(
-            User.email == form.data['username']).scalar()
+            User.email == flask_request.data['username']).scalar()
+        if user is None:
+            flash('Bad username or password.')
+            return flask_redirect(url_for('auth.login'))
         user.login(form.data['password'])
         if user is None or not user.is_authenticated:
             flash('Bad username or password.')
@@ -68,11 +71,11 @@ def register():
             except IntegrityError:
                 error = f"User {username} is already registered."
             else:
-                return flask_redirect(url_for("auth.login"))
+                return jsonify(new_user.serialize())
 
         flash(error)
 
-    return flask_render_template('auth/register.html')
+    return None
 
 
 @bp.route('/logout')

@@ -36,3 +36,4 @@ build/
 
 # ignore kompose files
 *.yaml
+venv

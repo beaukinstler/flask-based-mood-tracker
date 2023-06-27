@@ -33,6 +33,9 @@ def login():
     if form.validate_on_submit() or flask_request.method == 'POST':
         user = db.session.query(User).filter(
             User.email == form.data['username']).scalar()
+        if user is None:
+            flash('Bad username or password.')
+            return flask_redirect(url_for('auth.login'))
         user.login(form.data['password'])
         if user is None or not user.is_authenticated:
             flash('Bad username or password.')
@@ -79,6 +82,11 @@ def register():
 
 @bp.route('/logout')
 def logout():
-    current_user.logout()
-    logout_user()
-    return 'Logout'
+    if current_user.is_authenticated:
+        current_user.logout()
+        logout_user()
+        flash('Logged out successfully.')
+        return flask_redirect(url_for('main.index'))
+    else:
+        flash("You aren't logged in")
+        return flask_redirect(url_for('main.index'))
