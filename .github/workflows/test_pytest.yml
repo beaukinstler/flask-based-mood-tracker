@@ -26,6 +26,9 @@ jobs:
       TEST_SECRET_KEY: TestOnlyDonotusethis
       TEST_DATABASE_URL: "sqlite:///test.db"
       FLASK_ENV: development
+      WTF_CSRF_SECRET_KEY: "7K6VpJ7VA5akurC2FPjKLJKWuFws9ZV9Pcm9KKb4"
+      SECRET_KEY: "GithubActionsSecretKeyForFlask"
+
     steps:
       # Runs a single command using the runners shell, using run:
       - run: echo "Job automatically triggered by event ${{ github.event_name }}."

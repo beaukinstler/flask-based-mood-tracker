@@ -16,15 +16,12 @@ from src.models import db, User
 
 @pytest.fixture()
 def app():
-    test_config = "../tests/testing_config.py"
-    app = create_app(test_config)
-    app.config.update({
-        "TESTING": True,
-        "SERVER_NAME": "localhost:5000"
-    })
+
+    app = create_app()
+ 
 
     # Initialize the database
-    db.init_app(app)
+    #db.init_app(app)
     with app.app_context():
         db.create_all()
 
