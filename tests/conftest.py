@@ -37,7 +37,8 @@ def testclient(app):
 
 
 @pytest.fixture()
-def testclient_authenticated(testclient):
+def testclient_authenticated(app):
+    testclient = app.test_client()
     username= 'test@example.com'
     password = 'password'
     db.session.add(User(username,password))
