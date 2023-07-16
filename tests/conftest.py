@@ -11,7 +11,7 @@ https://johncox-38620.medium.com/creating-a-test-database-pytest-sqlalchemy-9735
 
 import pytest
 from src import create_app
-from src.models import db
+from src.models import db, User
 
 
 @pytest.fixture()
@@ -37,3 +37,14 @@ def app():
 @pytest.fixture()
 def testclient(app):
     return app.test_client()
+
+
+@pytest.fixture()
+def testclient_authenticated(testclient):
+    username= 'test@example.com'
+    password = 'password'
+    db.session.add(User(username,password))
+    db.session.commit()
+    response = testclient.post('/auth/login',json={"username":username,"password":password,"remember_me":True,"submit":True, "csrf_token":"asyouwere"})
+    return testclient
+

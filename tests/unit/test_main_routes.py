@@ -24,7 +24,7 @@ def test_get_index(testclient):
 
 @pytest.mark.focus
 @pytest.mark.unit
-def test_get_index(testclient):
+def test_get_index_not_auth_redirect(testclient):
     """
     GIVEN a Flask application configured for testing via a fixture
     WHEN the '/login' page is requested (GET)

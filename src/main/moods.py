@@ -15,7 +15,7 @@ def index():
     return jsonify(result)
 
 
-@bp.route("", methods=['POST'])
+@bp.route("/create", methods=['POST'])
 def create():
     if 'description' not in request.json:
         return abort(400)
@@ -27,13 +27,6 @@ def create():
 def show(id: int):
     mood = Mood.query.get_or_404(id)
     return jsonify(mood.serialize())
-
-
-# @bp.route("/<int:id>/teacher", methods=['GET'])
-# def show_teacher(id: int):
-#     mood = Mood.query.get_or_404(id)
-#     return jsonify(mood.teacher.serialize())
-
 
 @bp.route("/<int:id>", methods=['DELETE'])
 def delete(id: int):
