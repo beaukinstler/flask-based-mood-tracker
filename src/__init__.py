@@ -14,8 +14,7 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 
-if os.environ.get('FLASK_ENV') == 'development':
-    test_config = "../tests/testing_config.py"
+test_config = None
 
 
 def create_app(test_config=None):
