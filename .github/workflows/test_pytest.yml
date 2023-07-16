@@ -22,7 +22,6 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       TESTING: True
-      SECRET_KEY: TestOnlyDonotusethis
       DATABASE_URL: "sqlite:///test.db"
       FLASK_ENV: development
       WTF_CSRF_SECRET_KEY: "7K6VpJ7VA5akurC2FPjKLJKWuFws9ZV9Pcm9KKb4"
