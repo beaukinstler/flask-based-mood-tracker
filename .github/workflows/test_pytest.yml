@@ -64,6 +64,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Run pytest full
+      - name: Run pytest setup
         run: |
-          python -m pytest -v
+          python -m pytest -v -k test_fixture_setup

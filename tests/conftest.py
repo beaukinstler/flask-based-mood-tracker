@@ -20,10 +20,7 @@ def app():
     app = create_app(test_config)
     app.config.update({
         "TESTING": True,
-        "SERVER_NAME": "localhost:5000",
-        "SECRET_KEY": "Test-Only-Do-not-use-this",
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///test.db",
-        "FLASK_ENV": "development"
+        "SERVER_NAME": "localhost:5000"
     })
 
     # Initialize the database
