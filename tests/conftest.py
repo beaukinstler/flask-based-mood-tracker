@@ -26,7 +26,7 @@ def app():
         db.create_all()
 
         yield app
-
+        db.session.close()
         # Teardown - Drop all database tables
         db.drop_all()
 
