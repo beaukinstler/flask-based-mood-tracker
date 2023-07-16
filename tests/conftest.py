@@ -23,7 +23,7 @@ def app():
         "SERVER_NAME": "localhost:5000",
         "SECRET_KEY": "Test-Only-Do-not-use-this",
         "SQLALCHEMY_DATABASE_URI": "sqlite:///test.db",
-        "FLASK_ENV": "developement"
+        "FLASK_ENV": "development"
     })
 
     # Initialize the database
