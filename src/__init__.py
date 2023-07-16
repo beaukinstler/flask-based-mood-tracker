@@ -20,7 +20,7 @@ if os.environ.get('FLASK_ENV') == 'development':
 
 def create_app(test_config=None):
     if os.environ.get('FLASK_ENV') == 'development':
-        test_config = "..\\tests\\testing_config.py"
+        test_config = "../tests/testing_config.py"
     app = Flask(__name__, instance_relative_config=True)
     # commenting the below out to read form a config.py file, instead
 

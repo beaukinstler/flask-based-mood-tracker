@@ -15,7 +15,7 @@ def index():
     return jsonify(result)
 
 
-@bp.route("", methods=['POST'])
+@bp.route("/create", methods=['POST'])
 def create():
     if 'description' not in request.json:
         return abort(400)
