@@ -43,3 +43,4 @@ SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or database_url_string
 # other settings from examples.
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
+FLASK_DEBUG = True

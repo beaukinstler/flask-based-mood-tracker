@@ -112,4 +112,7 @@ loginServer": "bkinmoodyflask.azurecr.io
 
 az aks update -n flaskcluster -g moody-flask --attach-acr bkinmoodyflask
 
+
+kubectl create deployment primary --image=bkinmoodyflask.azurecr.io/moodyflask:v0.2
+
 ```

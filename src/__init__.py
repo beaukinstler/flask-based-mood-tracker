@@ -11,15 +11,14 @@ from flask_login import LoginManager
 
 
 db = SQLAlchemy()
-migrate = Migrate()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
-
-if os.environ.get('FLASK_ENV') == 'development':
-    test_config = "..\\tests\\testing_config.py"
+test_config = None
 
 
 def create_app(test_config=None):
+    if os.environ.get('FLASK_ENV') == 'development':
+        test_config = "..\\tests\\testing_config.py"
     app = Flask(__name__, instance_relative_config=True)
     # commenting the below out to read form a config.py file, instead
 
@@ -43,9 +42,11 @@ def create_app(test_config=None):
         app.config["WTF_CSRF_SECRET_KEY"] = "sdlfkajwdkj90234uofdkvnv0e89h9028"
 
     db.init_app(app)
-    login_manager.init_app(app)
+    migrate = Migrate(app, db)
 
-    migrate.init_app(app, db)
+    # initialize login managers with app
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
 
     # ensure the instance folder exists
     try:
@@ -70,4 +71,9 @@ def create_app(test_config=None):
     app.register_blueprint(api_users.bp)
     app.register_blueprint(api_auth.bp)
     app.register_blueprint(main)
+
+    if os.environ.get('FLASK_ENV') == 'development':
+        with app.app_context():
+            db.create_all()
+
     return app

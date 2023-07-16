@@ -159,8 +159,6 @@ def load_user(user_id):
     result = None
     try:
         found_user = User.query.filter_by(email=user_id).first()
-        if current_user == found_user:
-            found_user = current_user
     except:
         found_user = None
     result = found_user
