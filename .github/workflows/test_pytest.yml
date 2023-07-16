@@ -20,7 +20,19 @@ jobs:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
     runs-on: ubuntu-22.04
+    env:
+      TESTING: True
+      SECRET_KEY: "Test-Only-Do-not-use-this"
+      SQLALCHEMY_DATABASE_URI: "sqlite:///test.db"
+      FLASK_ENV: "developement"
     steps:
+      # Runs a single command using the runners shell, using run:
+        run: |
+          echo "Testing the env vars"
+          echo "$SQLALCHEMY_DATABASE_URI"
+          echo "$SECRET_KEY"
+
+
       # Runs a single command using the runners shell, using run:
       - run: echo "Job automatically triggered by event ${{ github.event_name }}."
 
