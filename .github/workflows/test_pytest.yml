@@ -22,9 +22,8 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       TESTING: True
-      TEST_DATABASE_NAME: test_moody
-      TEST_SECRET_KEY: TestOnlyDonotusethis
-      TEST_DATABASE_URL: "sqlite:///test.db"
+      SECRET_KEY: TestOnlyDonotusethis
+      DATABASE_URL: "sqlite:///test.db"
       FLASK_ENV: development
       WTF_CSRF_SECRET_KEY: "7K6VpJ7VA5akurC2FPjKLJKWuFws9ZV9Pcm9KKb4"
       SECRET_KEY: "GithubActionsSecretKeyForFlask"
@@ -58,7 +57,7 @@ jobs:
       - name: Echo vars
         run: |
           echo "Testing the env vars"
-          echo "$SQLALCHEMY_DATABASE_URI"
+          echo "$TEST_DATABASE_URL"
           echo "$SECRET_KEY"
 
       - name: Run pip to upgrade pip and install
