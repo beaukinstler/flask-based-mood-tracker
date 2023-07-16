@@ -67,4 +67,4 @@ jobs:
 
       - name: Run pytest setup
         run: |
-          python -m pytest -v -k test_fixture_setup
+          python -m pytest -v
