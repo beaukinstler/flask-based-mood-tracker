@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  test_moody_pg:
+    container_name: test_moody_pg_container
+    image: postgres:14.1-alpine3.15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGUSER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - "${PWD}/data/initdb/:/docker-entrypoint-initdb.d/"
+  test_moody_flask:
+    container_name: test_moody_flask_container
+    image: docker.io/bkin/moodyflask:latest
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: test_moody_pg
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5000:5000
+    depends_on:
+      - test_moody_pg
+networks:
+  default:
+    name: test_moody_net

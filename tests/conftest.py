@@ -16,7 +16,7 @@ from src.models import db
 
 @pytest.fixture()
 def app():
-    test_config = "..\\tests\\testing_config.py"
+    test_config = "../tests/testing_config.py"
     app = create_app(test_config)
     app.config.update({
         "TESTING": True,
@@ -24,7 +24,7 @@ def app():
     })
 
     # Initialize the database
-    db.init_app(app)
+    # db.init_app(app)
     with app.app_context():
         db.create_all()
 

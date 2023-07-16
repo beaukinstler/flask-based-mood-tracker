@@ -77,6 +77,12 @@
             "request": "launch",
             "module": "pytest",
             "justMyCode": true,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_APP": "wsgi.py",
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
+            },
             "args": [
                 "-v",
                 "-m unit"
@@ -88,6 +94,12 @@
             "request": "launch",
             "module": "pytest",
             "justMyCode": true,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_APP": "wsgi.py",
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
+            },
             "args": [
                 "-v",
                 "-m fixture"
@@ -99,6 +111,12 @@
             "request": "launch",
             "module": "pytest",
             "justMyCode": true,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_APP": "wsgi.py",
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
+            },
             "args": [
                 "-v",
                 "-k test_basics"
@@ -110,6 +128,12 @@
             "request": "launch",
             "module": "pytest",
             "justMyCode": true,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_APP": "wsgi.py",
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
+            },
             "args": [
                 "-v",
                 "-m users"
@@ -121,6 +145,12 @@
             "request": "launch",
             "module": "pytest",
             "justMyCode": true,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_APP": "wsgi.py",
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
+            },
             "args": [
                 "-v",
                 "--disable-warnings",
@@ -133,6 +163,12 @@
             "request": "launch",
             "module": "pytest",
             "justMyCode": true,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_APP": "wsgi.py",
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
+            },
             "args": [
                 "-v",
                 "-m auth"
@@ -144,6 +180,12 @@
             "request": "launch",
             "module": "pytest",
             "justMyCode": true,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_APP": "wsgi.py",
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
+            },
             "args": [
                 "-v",
                 "-m focus"
