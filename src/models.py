@@ -6,7 +6,7 @@ from sqlalchemy.sql import func
 import datetime
 from src.security import pwd_context
 from src import db
-from flask_login import current_user
+from flask_login import current_user, UserMixin 
 
 
 class UserMoodLog(db.Model):
@@ -72,7 +72,7 @@ class Mood(db.Model):
         db.session.commit()
 
 
-class User(db.Model):
+class User(UserMixin,  db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.Text, nullable=False)
@@ -82,34 +82,7 @@ class User(db.Model):
         cascade='all, delete',
         back_populates="user"
     )
-    _is_active = True
-    _is_anonymous = False
-    _is_authenticated = True
 
-    # properties for flask_login
-    @property
-    def is_active(self):
-        return self._is_active
-
-    @is_active.setter
-    def is_active(self, new_active):
-        self._is_active = new_active
-
-    @property
-    def is_authenticated(self):
-        return self._is_authenticated
-
-    @is_authenticated.setter
-    def is_authenticated(self, new_authenticated):
-        self._is_authenticated = new_authenticated
-
-    @property
-    def is_anonymous(self):
-        return self._is_anonymous
-
-    @is_anonymous.setter
-    def is_anonymous(self, new_anis_anonymous):
-        self._is_anonymous = new_anis_anonymous
 
     def __init__(self, email, password):
         self.email = email
@@ -146,9 +119,9 @@ class User(db.Model):
             self._is_active = False
 
     def logout(self):
+        pass
 
-        self._is_authenticated = False
-        self.is_active = False
+
 
 
 # user loader for the Flask-Login module

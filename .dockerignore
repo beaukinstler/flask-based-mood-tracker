@@ -26,3 +26,4 @@ LICENSE
 README.md
 **/*.md
 **/*.bak
+venv

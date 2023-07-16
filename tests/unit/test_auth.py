@@ -1,7 +1,7 @@
 import pytest
 from flask import Flask
 from src.models import db, User
-from flask_login import logout_user, login_user
+from flask_login import logout_user, login_user, current_user
 
 
 @pytest.mark.auth
@@ -97,6 +97,5 @@ def test_flask_login_logout_user(testclient):
     user.login(user_password)
     login_user(user)
     logout_user()
-    user.logout()
-    assert user.is_authenticated == False
-    assert user.is_active == False
+    assert current_user.is_authenticated == False
+
