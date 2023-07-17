@@ -10,6 +10,7 @@ from src import db
 from sqlalchemy.exc import IntegrityError
 from flask_login import login_user, current_user
 from werkzeug.urls import url_parse
+from time import time
 
 bp = Blueprint("api_auth", __name__, url_prefix="/api.v1/auth")
 
@@ -53,9 +54,9 @@ def login():
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
-    if flask_request.method == 'POST':
-        username = flask_request.form['username']
-        password = flask_request.form['password']
+    if flask_request.method == 'POST' and flask_request.content_type == 'application/json':
+        username = flask_request.json.get("username")
+        password = flask_request.json.get("password")
         error = None
 
         if not username:
@@ -72,12 +73,16 @@ def register():
                 error = f"User {username} is already registered."
             else:
                 return jsonify(new_user.serialize())
+        
 
-        flash(error)
+    # from here is an error response
+    message = "Your registration didn't work. Ensure you send 'application/json' with 'username' and 'password'."
+    flask_request.json.update({"message":message, "error":error})
 
-    return None
+    return jsonify(flask_request.json)
 
 
 @bp.route('/logout')
 def logout():
-    return 'Logout'
+    message = {"user logged out":current_user,"datetime":time.now()}
+    return jsonify(message)
