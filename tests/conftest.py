@@ -12,6 +12,12 @@ https://johncox-38620.medium.com/creating-a-test-database-pytest-sqlalchemy-9735
 import pytest
 from src import create_app
 from src.models import db, User
+from dotenv import load_dotenv
+
+
+@pytest.fixture(scope='session', autouse=True)
+def load_env():
+    load_dotenv(dotenv_path=".env_test")
 
 
 @pytest.fixture()
