@@ -49,6 +49,6 @@ def testclient_authenticated(app):
     password = 'password'
     db.session.add(User(username,password))
     db.session.commit()
-    response = testclient.post('/auth/login',json={"username":username,"password":password,"remember_me":True,"submit":True, "csrf_token":"asyouwere"})
+    response = testclient.post('/auth/login',data={"username":username,"password":password,"remember_me":True,"submit":True, "csrf_token":"asyouwere"})
     return testclient
 
