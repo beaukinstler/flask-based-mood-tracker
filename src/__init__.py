@@ -3,6 +3,7 @@ import os,json
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_bootstrap import Bootstrap5
 
 # https://flask.palletsprojects.com/en/2.0.x/patterns/appfactories/
 
@@ -13,6 +14,7 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
+
 
 
 
@@ -29,6 +31,7 @@ def create_app():
 
     db.init_app(app)
     migrate = Migrate(app, db)
+    bootstrap = Bootstrap5(app)
 
     # initialize login managers with app
     login_manager.init_app(app)
