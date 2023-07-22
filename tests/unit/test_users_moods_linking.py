@@ -40,3 +40,43 @@ def test_user_mood_log(testclient):
 
     moods = db.session.query(Mood).all()
     assert moods[0].users[0].user == user
+
+@pytest.mark.focus
+@pytest.mark.users
+@pytest.mark.unit
+def test_user_mood_log(testclient):
+    """
+    GIVEN a Flask application configured for in this test file for testing via a fixture
+    WHEN creating a User, Mood, and UserMoodLog, linking them together
+    THEN the User.moods will hold the new mood and the Mood().users will hold the the user
+    """
+
+    # Example: Insert a user into the database
+    user_email = 'user@example.com'
+    user_password = 'password'
+    user = User(email=user_email, password=user_password)
+    user_email2 = 'user2@example.com'
+    user2 = User(email=user_email2, password=user_password)
+    db.session.add(user)
+    db.session.add(user2)
+    db.session.commit()
+    # Log association
+    user_mood = UserMoodLog(note='test')
+
+    user_mood.mood = Mood('happy')
+    user.moods.append(user_mood)
+
+    db.session.commit()
+    user2.moods.append(user_mood)
+    db.session.commit()
+
+    query = db.session.query(UserMoodLog)
+    associations = query.all()
+
+    assert associations[0].user == user2
+    assert user.moods == []
+    assert user2.moods[0].mood.description == 'happy'
+
+    moods = db.session.query(Mood).all()
+    assert len(moods) == 1
+
