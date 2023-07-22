@@ -43,13 +43,14 @@ def login():
         else:
             flash('Logged in successfully.')
             login_user(user, remember=True)
-            return flask_redirect(url_for('users.index'))
+            # return flask_redirect(url_for('users.index'))
 
-        next_page = flask_request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != "":
-            next_page = url_for('users.index')
+            # next_page = flask_request.args.get('next')
+            next_page = url_for('main.index')
+            if not next_page or url_parse(next_page).netloc != "":
+                next_page = url_for('users.index')
 
-        return flask_redirect(next_page)
+            return flask_redirect(next_page)
     return flask_render_template('login.html', form=form)
 
 
