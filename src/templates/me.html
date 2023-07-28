@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Me</h1>
+<ul>
+    {% for label,value in user_data.items() %}
+    <li>
+        {{ label }}: <stong>{{ value }}</stong>
+    </li>
+  {% endfor %}
+
+</ul>
+{% endblock %}

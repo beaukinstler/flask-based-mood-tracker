@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, abort, request
+from flask import Blueprint, jsonify, request as flask_request, render_template
 from ..models import User
 from src import db
 from sqlalchemy.exc import IntegrityError
@@ -13,6 +13,12 @@ bp = Blueprint("users", __name__, url_prefix="/users")
 def index():
     result = current_user.serialize()
     return jsonify(result)
+
+@bp.route("/me", methods=['GET'])
+@login_required
+def me():
+    result = current_user.serialize()
+    return render_template('me.html', user_data=result)
 
 
 @bp.route("/all", methods=['GET'])
