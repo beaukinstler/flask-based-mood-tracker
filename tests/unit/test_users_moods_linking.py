@@ -1,6 +1,7 @@
 import pytest
 from flask import Flask
 from src.models import db, User, Mood, UserMoodLog
+from time import sleep
 
 
 @pytest.mark.users
@@ -76,7 +77,54 @@ def test_user_mood_log(testclient):
     assert associations[0].user == user2
     assert user.moods == []
     assert user2.moods[0].mood.description == 'happy'
+    assert 'happy' in str(user2.serialize())
 
     moods = db.session.query(Mood).all()
     assert len(moods) == 1
+
+
+
+@pytest.mark.focus
+@pytest.mark.users
+@pytest.mark.unit
+def test_user_mood_log(testclient):
+    """
+    GIVEN a Flask application configured for in this test file for testing via a fixture
+    WHEN creating a User, Mood, and UserMoodLog, linking them together
+    THEN the User.moods will hold the new mood and the Mood().users will hold the the user
+    """
+
+    # Example: Insert a user into the database
+    user_email = 'user@example.com'
+    user_password = 'password'
+    user = User(email=user_email, password=user_password)
+    db.session.add(user)
+    db.session.commit()
+    # Log association
+    user_mood = UserMoodLog(note='test 1')
+    user_mood.mood = Mood('happy')
+
+    sleep(4)
+    user_mood2 = UserMoodLog(note='test 2')
+    user_mood2.mood = Mood('sad')
+    user.moods.append(user_mood2)
+    user.moods.append(user_mood)
+    # db.session.add(user_mood2)
+    # db.session.add(user_mood)
+    db.session.commit()
+
+    query = db.session.query(UserMoodLog)
+    associations = query.all()
+
+    assert associations[0].user == user
+    with pytest.raises(AssertionError) as execinfo:
+        assert user.moods == []
+    moods = user.get_moods()
+    assert moods[0] != moods[1]
+    assert moods[0]['date'] <  moods[1]['date']
+    assert 'happy' in str(user.moods[0])
+    assert 'sad' in str(user.moods[1])
+
+    moods = db.session.query(Mood).all()
+    assert len(moods) == 2
 
