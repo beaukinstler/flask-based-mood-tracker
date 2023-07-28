@@ -27,9 +27,16 @@ class UserMoodLog(db.Model):
     user = db.relationship('User', back_populates="moods")
     mood = db.relationship('Mood', back_populates="users")
 
-    def __init__(self, note):
+    def __init__(self, note=None):
         if not None == note and note != "":
             self.note = note
+
+    def __str__(self):
+        return str(f"user {self.user_id} was {self.mood.description} at {self.created_at}.")
+
+    def __repr__(self):
+        return str("UserMoodLog<id:",self.id) + f"{str(self.serialize())}>"
+
 
     # for sorting based on info here https://portingguide.readthedocs.io/en/latest/comparisons.html
     def __eq__(self, other):
@@ -37,6 +44,16 @@ class UserMoodLog(db.Model):
 
     def __lt__(self, other):
         return self.created_at < other.created_at and self.user == other.user
+
+    def serialize(self):
+        response = {
+            "user": f"{self.user}",
+            "mood_description": f"{self.mood.description}",
+            "note": f"{self.note}",
+            "date": f"{self.created_at}",
+        }
+        
+        return response
 
 
 class Mood(db.Model):
@@ -88,18 +105,25 @@ class User(UserMixin,  db.Model):
         self.email = email
         self.password = pwd_context.hash(password)
 
+    def __repr__(self):
+        return str(f"User<id:{self.id}, email:{self.email}>")
+
+    def __str__(self):
+        return str(self.email)
+
     def __eq__(self, other):
         return self.email == other.email and self.id == other.id
 
     def serialize(self):
         response = {
             "user_id": f"{self.id}",
-            "user_email": f"{self.email}"
+            "user_email": f"{self.email}",
+            "mood": f'{"" if not self.moods else sorted(self.moods)[-1].serialize()}'
         }
         return response
 
     def get_moods(self):
-        return [mood.serialize for mood in self.moods]
+        return [mood.serialize() for mood in sorted(self.moods)]
 
     def get_id(self):
         """Return the email address to satisfy Flask-Login's requirements."""
