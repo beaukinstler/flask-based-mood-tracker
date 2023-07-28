@@ -51,6 +51,17 @@
             "justMyCode": true
         },
         {
+            "name": "pytest --lastfailed",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "args": [
+                "-v",
+                "--last-failed"
+            ]
+        },
+        {
             "name": "pytest",
             "type": "python",
             "request": "launch",
