@@ -13,7 +13,8 @@ import pytest
 from src import create_app
 from src.models import db, User
 from dotenv import load_dotenv
-
+from flask_login import login_user, current_user, logout_user
+from src.models import User
 
 @pytest.fixture(scope='session', autouse=True)
 def load_env():
@@ -47,8 +48,11 @@ def testclient_authenticated(app):
     testclient = app.test_client()
     username= 'test@example.com'
     password = 'password'
-    db.session.add(User(username,password))
+    user = User(username,password)
+    db.session.add(user)
     db.session.commit()
-    response = testclient.post('/auth/login',data={"username":username,"password":password,"remember_me":True,"submit":True, "csrf_token":"asyouwere"})
-    return testclient
+    with testclient:
+        login_user(user, remember=True)
+        
+    yield testclient
 
