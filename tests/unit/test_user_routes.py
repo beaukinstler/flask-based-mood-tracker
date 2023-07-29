@@ -68,7 +68,7 @@ def test_users_get_page_no_users(testclient):
 @pytest.mark.auth
 @pytest.mark.users
 @pytest.mark.unit
-def test_users_get_page_with_users(testclient):
+def test_users_get_page_with_users(testclient_authenticated):
     """
     given: a GET to url /users
 
@@ -77,12 +77,7 @@ def test_users_get_page_with_users(testclient):
     then: get a response with status 200
 
     """
-    username= 'test@example.com'
-    password = 'password'
-    db.session.add(User(username,password))
-    db.session.commit()
-    response = testclient.post('/auth/login', data={"username":username,"password":password,"remember_me":True,"submit":True, "csrf_token":"asyouwere"})
-    response = testclient.get('/users')
+    response = testclient_authenticated.get('/users')
     assert response.status_code == 200
 
     """
