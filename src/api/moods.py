@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, abort, request
 from ..models import Mood
 from sqlalchemy.exc import IntegrityError
 from src import db
+from flask_login import login_required, current_user
 
 bp = Blueprint("api_moods", __name__, url_prefix="/api.v1/moods")
 
@@ -15,27 +16,34 @@ def index():
     return jsonify(result)
 
 
-@bp.route("/create", methods=['POST'])
-def create():
-    if 'description' not in request.json:
-        return abort(400)
-    mood = Mood(request.json['description'])
-    return jsonify(mood.serialize())
-
-
 @bp.route("/<int:id>", methods=['GET'])
 def show(id: int):
     mood = Mood.query.get_or_404(id)
     return jsonify(mood.serialize())
 
 
-# @bp.route("/<int:id>/teacher", methods=['GET'])
-# def show_teacher(id: int):
-#     mood = Mood.query.get_or_404(id)
-#     return jsonify(mood.teacher.serialize())
+"""
+Authentication required routes 
+"""
+
+@bp.route("/create", methods=['POST'])
+@login_required
+def create():
+    if 'description' not in request.json:
+        return abort(400)
+    mood = Mood(request.json['description'])
+    try:
+        db.session.add(mood)
+        db.session.commit()
+    except IntegrityError as e:
+        db.session.rollback()
+        abort(409, description="Attempted Data Duplicate or other Integrity Error")
+    return jsonify(mood.serialize())
+
 
 
 @bp.route("/<int:id>", methods=['DELETE'])
+@login_required
 def delete(id: int):
     mood = Mood.query.get_or_404(id)
     result = {"message": "DELETE via HTTP",
@@ -46,6 +54,7 @@ def delete(id: int):
 
 
 @bp.route("/<int:id>", methods=['PUT', 'PATCH'])
+@login_required
 def update(id: int):
     """
     update a mood name

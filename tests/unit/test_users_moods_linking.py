@@ -102,15 +102,17 @@ def test_user_mood_log(testclient):
     db.session.commit()
     # Log association
     user_mood = UserMoodLog(note='test 1')
-    user_mood.mood = Mood('happy')
+    mood1 = Mood('happy')
+    db.session.add(mood1)
+    user_mood.mood = mood1
 
     sleep(4)
     user_mood2 = UserMoodLog(note='test 2')
-    user_mood2.mood = Mood('sad')
+    mood2 = Mood('sad')
+    db.session.add(mood2)
+    user_mood2.mood = mood2
     user.moods.append(user_mood2)
     user.moods.append(user_mood)
-    # db.session.add(user_mood2)
-    # db.session.add(user_mood)
     db.session.commit()
 
     query = db.session.query(UserMoodLog)

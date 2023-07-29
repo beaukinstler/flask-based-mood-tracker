@@ -64,6 +64,12 @@ def create():
     if 'description' not in flask_request.json:
         return abort(400)
     mood = Mood(flask_request.json['description'])
+    try:
+        db.session.add(mood)
+        db.session.commit()
+    except IntegrityError as e:
+        db.session.rollback()
+        abort(409, description="Attempted Data Duplicate or other Integrity Error")
     return jsonify(mood.serialize())
 
 
