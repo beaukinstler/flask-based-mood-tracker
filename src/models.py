@@ -59,7 +59,7 @@ class UserMoodLog(db.Model):
 class Mood(db.Model):
     __tablename__ = 'moods'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    description = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=False, unique=True)
     users = db.relationship(
         'UserMoodLog',
         cascade='all, delete',
