@@ -131,7 +131,8 @@ class User(UserMixin,  db.Model):
         return self.email
 
     def verify_password(self, passwrd_given):
-        return pwd_context.verify_and_update(str(passwrd_given), self.password)
+        result = pwd_context.verify_and_update(str(passwrd_given), self.password)
+        return result[0] # result is a tuple, first item is boolean
 
     def login(self, password):
         if self.verify_password(password):
