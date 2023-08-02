@@ -8,6 +8,32 @@
         {{ label }}: <stong>{{ value }}</stong>
     </li>
   {% endfor %}
-
 </ul>
+<h4>Past Moods</h4>
+<table class="table">
+  <thead">
+    <tr>
+    {% for k in moods[0].keys() %}
+      <th scope="col">
+        {{ k }}<stong>
+      </th>
+    {% endfor %}
+    </tr>
+  </thead>
+
+  <tbody>
+  {% for mood in moods %}
+  <tr scope="row">
+    {% for k in mood.keys() %}
+    <td>
+      {{ mood[k] }}
+    </td>
+    {% endfor %}
+  </tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+
 {% endblock %}

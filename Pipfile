@@ -17,6 +17,7 @@ python-dotenv = "*"
 flask-login = "*"
 passlib = "*"
 flask-wtf = "*"
+requests = "==2"
 
 [dev-packages]
 flake8 = "*"
