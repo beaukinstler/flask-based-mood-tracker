@@ -7,6 +7,11 @@ import datetime
 from src.security import pwd_context
 from src import db
 from flask_login import UserMixin
+from sqlalchemy import select
+
+
+
+
 
 
 class UserMoodLog(db.Model):
@@ -155,7 +160,7 @@ class User(UserMixin,  db.Model):
 def load_user(user_id):
     result = None
     try:
-        found_user = User.query.filter_by(email=user_id).first()
+        found_user = select(User).where(User.email == user_id).first()
     except:
         found_user = None
     result = found_user

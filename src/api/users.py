@@ -3,6 +3,7 @@ from ..models import User
 from sqlalchemy.exc import IntegrityError
 from src import db
 from flask_login import login_required
+from sqlalchemy import select
 
 
 bp = Blueprint("api_users", __name__, url_prefix="/api.v1/users")
@@ -32,14 +33,19 @@ def index():
 #     return jsonify(user.serialize())
 
 
-# @bp.route("/<int:id>", methods=['DELETE'])
-# def delete(id: int):
-#     user = User.query.get_or_404(id)
-#     result = {"message": "DELETE via HTTP",
-#               "id": user.id, 'description': user.description}
-#     db.session.delete(user)
-#     db.session.commit()
-#     return jsonify(result)
+@bp.route("/delete", methods=['DELETE'])
+def delete(id: int):
+    if 'username' not in request.json:
+        return abort(400)
+
+    user = select(User).where(User.email == request.json['username']).first()
+    if not user.verify_password(request.json['password']):
+        return abort(400)
+    result = {"message": "DELETE via HTTP",
+              "id": user.id, 'email': user.email}
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify(result)
 
 
 # @bp.route("/<int:id>", methods=['PUT', 'PATCH'])

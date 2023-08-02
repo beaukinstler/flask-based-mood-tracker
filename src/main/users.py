@@ -18,7 +18,9 @@ def index():
 @login_required
 def me():
     result = current_user.serialize()
-    return render_template('me.html', user_data=result)
+    moods = current_user.get_simple_moods()
+    moods.reverse()
+    return render_template('me.html', user_data=result, moods=moods)
 
 
 @bp.route("/all", methods=['GET'])
