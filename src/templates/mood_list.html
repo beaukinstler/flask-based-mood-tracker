@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>moods list</h1>
+
+<table class="table-secondary">
+    <thead>
+        <tr>
+            <th>description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mood in moods %}
+        {% if (loop.index % 2) == 0 %}
+        <tr class="table-light">
+        {% else %}
+        <tr class="table-secondary">
+
+        {% endif %}
+
+            <td>{{ mood.mood_description }}</td>
+        </tr>
+        {% endfor %}
+</table>
+
+{% endblock %}

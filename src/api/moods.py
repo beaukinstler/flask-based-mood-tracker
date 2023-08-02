@@ -10,9 +10,9 @@ bp = Blueprint("api_moods", __name__, url_prefix="/api.v1/moods")
 @bp.route("", methods=['GET'])
 def index():
     moods = Mood.query.all()
-    result = []
-    for mood in moods:
-        result.append(mood.serialize())
+    result = [mood.serialize() for mood in moods]
+    if result is None:
+        return jsonify({"message": "No Data"}), 404
     return jsonify(result)
 
 
@@ -25,6 +25,7 @@ def show(id: int):
 """
 Authentication required routes 
 """
+
 
 @bp.route("/create", methods=['POST'])
 @login_required
@@ -39,7 +40,6 @@ def create():
         db.session.rollback()
         abort(409, description="Attempted Data Duplicate or other Integrity Error")
     return jsonify(mood.serialize())
-
 
 
 @bp.route("/<int:id>", methods=['DELETE'])

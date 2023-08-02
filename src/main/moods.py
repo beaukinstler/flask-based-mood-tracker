@@ -7,6 +7,8 @@ from flask_wtf import FlaskForm
 from wtforms import HiddenField
 from wtforms.validators import DataRequired
 from flask_login import login_required, current_user
+import requests
+import json
 
 bp = Blueprint("moods", __name__, url_prefix="/moods")
 
@@ -15,8 +17,7 @@ class MoodForm(FlaskForm):
     mood = HiddenField('mood', validators=[DataRequired()])
 
 
-
-@bp.route("", methods=['GET','POST'])
+@bp.route("", methods=['GET', 'POST'])
 @login_required
 def index():
     form = MoodForm()
@@ -29,7 +30,7 @@ def index():
         id = int(flask_request.form['button'])
         token = str(flask_request.form['token'])
         mood = Mood.query.all()
-        moods = [ m for m in mood if m.id == id ]
+        moods = [m for m in mood if m.id == id]
         if moods:
             mood = moods[0]
             mood_description = mood.description
@@ -49,13 +50,14 @@ def index():
 
 
 @bp.route("/all", methods=['GET'])
-@login_required
 def all():
-    moods = Mood.query.all()
-    result = []
-    for mood in moods:
-        result.append(mood.serialize())
-    return jsonify(result)
+    headers = {"Accept": "application/json"}
+    moods = requests.get(
+        url_for('api_moods.index', _external=True), headers=headers, stream=False)
+    if moods.status_code != 200:
+        return abort(404)
+    return flask_render_template('mood_list.html', moods=moods.json())
+
 
 
 @bp.route("/create", methods=['POST'])
@@ -78,7 +80,9 @@ def show(id: int):
     mood = Mood.query.get_or_404(id)
     return jsonify(mood.serialize())
 
+
 @bp.route("/<int:id>", methods=['DELETE'])
+@login_required
 def delete(id: int):
     mood = Mood.query.get_or_404(id)
     result = {"message": "DELETE via HTTP",

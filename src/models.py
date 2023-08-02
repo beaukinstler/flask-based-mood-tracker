@@ -121,6 +121,11 @@ class User(UserMixin,  db.Model):
     def get_moods(self):
         return [mood.serialize() for mood in sorted(self.moods)]
 
+    def get_simple_moods(self):
+        result = [ {"mood":str(i.mood),"time":i.created_at} for i in self.moods ]
+
+        return result
+
     def get_id(self):
         """Return the email address to satisfy Flask-Login's requirements."""
         return self.email
