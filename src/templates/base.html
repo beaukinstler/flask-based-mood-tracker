@@ -1,11 +1,13 @@
+
 {% from 'bootstrap5/nav.html' import render_nav_item %}
 {% from 'bootstrap5/utils.html' import render_messages %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Bootstrap-Flask Demo Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0, shrink-to-fit=yes">
+    <title>mood tabs</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     {{ bootstrap.load_css() }}
     <style>
@@ -31,9 +33,15 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 {{ render_nav_item('main.index', 'Home') }}
-                <li class="nav-item"><a class="nav-link" href="https://bootstrap-flask.readthedocs.io/" target="_blank">Documentation</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://getbootstrap.com/docs/5.1/getting-started/introduction/" target="_blank">Bootstrap Documentation</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://github.com/helloflask/bootstrap-flask" target="_blank">GitHub</a></li>
+                {{ render_nav_item('moods.all', 'Mood Types') }}
+                {% if current_user.is_authenticated %}
+                    {{ render_nav_item('moods.index', 'Update Mood') }}
+                    {{ render_nav_item('users.me', 'Me') }}
+                    {{ render_nav_item('auth.logout', 'Logout') }}
+                {% else %}
+                    {{ render_nav_item('auth.login', 'Login') }}
+                    {{ render_nav_item('auth.register', 'Register') }}
+                {% endif %}
             </ul>
         </div>
         </div>
@@ -46,7 +54,7 @@
 
     <footer class="text-center">
         {% block footer %}
-            <small> &copy; 2018–<script>document.write(new Date().getFullYear())</script> <a href="https://github.com/greyli">Grey Li</a>
+            <small> &copy; <script>current_year = new Date().getFullYear(); 2023 === current_year ? document.write(current_year) : document.write("2023-" + current_year)</script> <a href="https://github.com/beaukinstler">beau kinstler</a>
             </small>
         {% endblock %}
     </footer>
