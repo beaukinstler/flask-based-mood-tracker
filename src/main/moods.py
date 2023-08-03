@@ -1,3 +1,4 @@
+from sqlalchemy import select, delete, insert, update
 from flask import Blueprint, jsonify, abort, url_for, flash
 from flask import redirect as flask_redirect, request as flask_request, render_template as flask_render_template
 from ..models import Mood, UserMoodLog, User
@@ -51,12 +52,11 @@ def index():
 
 @bp.route("/all", methods=['GET'])
 def all():
-    headers = {"Accept": "application/json"}
-    moods = requests.get(
-        url_for('api_moods.index', _external=True), headers=headers, stream=False)
-    if moods.status_code != 200:
+
+    moods = db.session.execute(select(Mood).order_by(Mood.id)).scalars().all()
+    if moods is None:
         return abort(404)
-    return flask_render_template('mood_list.html', moods=moods.json())
+    return flask_render_template('mood_list.html', moods=moods)
 
 
 
