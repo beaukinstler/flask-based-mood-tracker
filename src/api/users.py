@@ -12,7 +12,7 @@ bp = Blueprint("api_users", __name__, url_prefix="/api.v1/users")
 @bp.route("", methods=['GET'])
 @login_required
 def index():
-    users = User.query.all()
+    users = db.session.execute(select(User).order_by(User.id)).scalars().all()
     result = []
     for user in users:
         result.append(user.serialize())
@@ -34,11 +34,11 @@ def index():
 
 
 @bp.route("/delete", methods=['DELETE'])
-def delete(id: int):
+def delete():
     if 'username' not in request.json:
         return abort(400)
 
-    user = select(User).where(User.email == request.json['username']).first()
+    user = db.session.scalar(select(User).where(User.email == request.json['username']).limit(1))
     if not user.verify_password(request.json['password']):
         return abort(400)
     result = {"message": "DELETE via HTTP",
