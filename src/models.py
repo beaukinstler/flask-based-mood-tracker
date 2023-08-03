@@ -94,7 +94,7 @@ class Mood(db.Model):
 class User(UserMixin,  db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.Text, nullable=False)
+    email = db.Column(db.Text, nullable=False, unique=True)
     password = db.Column(db.Text, nullable=False)
     moods = db.relationship(
         'UserMoodLog',
