@@ -160,7 +160,7 @@ class User(UserMixin,  db.Model):
 def load_user(user_id):
     result = None
     try:
-        found_user = select(User).where(User.email == user_id).first()
+        found_user = db.session.execute(select(User).where(User.email == user_id)).scalars().first()
     except:
         found_user = None
     result = found_user
