@@ -2,34 +2,28 @@ import pytest
 from flask import Flask
 from src.models import db, Mood
 import json
+import requests
+from flask import url_for
 
 
 @pytest.mark.unit
 @pytest.mark.moods
-def test_moods_get_page(testclient):
+def test_moods_get_page(testclient_authenticated):
     """
     GIVEN a Flask application configured for testing via a fixture
-    WHEN the '/moods' page is requested (GET)
+    WHEN the '/moods/all' page is requested (GET)
     THEN check that the response is valid
     """
+    with testclient_authenticated as test_client:
+        mood = Mood("temp")
+        db.session.add(mood)
+        db.session.commit()
+        mood2 = Mood("temp2")
+        db.session.add(mood2)
+        db.session.commit()
 
-    # Create a test client using the Flask application configured for testing
-
-    response = testclient.get('/moods')
-    assert response.status_code == 200
-
-
-def test_moods_get_page(testclient):
-    """
-    GIVEN a Flask application configured for testing via a fixture
-    WHEN the '/moods' page is requested (GET)
-    THEN check that the response is valid
-    """
-
-    # Create a test client using the Flask application configured for testing
-
-    response = testclient.get('/moods/all')
-    assert response.status_code == 302
+        gui = testclient_authenticated.get(url_for('moods.all'), follow_redirects=True)
+        assert gui.status_code == 200
 
 
 @pytest.mark.unit
