@@ -4,7 +4,7 @@ from src.models import db, Mood
 import json
 
 ### api tests
-@pytest.mark.focus
+
 @pytest.mark.unit
 @pytest.mark.moods
 def test_api_moods_get_page(testclient):
@@ -22,7 +22,7 @@ def test_api_moods_get_page(testclient):
 
 
 ### api tests
-@pytest.mark.focus
+
 @pytest.mark.unit
 @pytest.mark.moods
 def test_api_moods_get_page(testclient):
@@ -39,7 +39,7 @@ def test_api_moods_get_page(testclient):
     assert response.status_code == 302
 
 
-@pytest.mark.focus
+
 @pytest.mark.unit
 @pytest.mark.moods
 def test_api_moods_get_page(testclient):

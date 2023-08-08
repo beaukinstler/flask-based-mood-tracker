@@ -2,6 +2,7 @@ import pytest
 from flask import Flask
 from src.models import db, User, Mood, UserMoodLog
 from time import sleep
+from flask_login import current_user
 
 
 @pytest.mark.users
@@ -42,7 +43,7 @@ def test_user_mood_log(testclient):
     moods = db.session.query(Mood).all()
     assert moods[0].users[0].user == user
 
-@pytest.mark.focus
+
 @pytest.mark.users
 @pytest.mark.unit
 def test_user_mood_log(testclient):
@@ -84,7 +85,7 @@ def test_user_mood_log(testclient):
 
 
 
-@pytest.mark.focus
+
 @pytest.mark.users
 @pytest.mark.unit
 def test_user_mood_log(testclient):
@@ -130,3 +131,35 @@ def test_user_mood_log(testclient):
     moods = db.session.query(Mood).all()
     assert len(moods) == 2
 
+
+
+@pytest.mark.unit
+@pytest.mark.users
+def test_new_mood_too_soon(testclient_authenticated):
+    """
+    GIVEN a mood logged to a user
+    WHEN the current time is less than the configured limit
+    THEN the data is not logged and there is a 400 response
+    """
+    user = current_user
+    happy = Mood("happy")
+    sad = Mood("sad")
+    db.session.add(happy)
+    db.session.add(sad)
+    db.session.commit()
+
+    user_mood = UserMoodLog()
+    user_mood.mood = happy
+    user.moods.append(user_mood)
+    db.session.commit()
+    assert user.moods[0].mood.description == 'happy'
+
+    user_mood = None
+    user_mood = UserMoodLog()
+    user_mood.mood = happy
+
+    
+
+
+
+    assert response.status_code == 400

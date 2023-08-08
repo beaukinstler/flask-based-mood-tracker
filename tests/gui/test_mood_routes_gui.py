@@ -128,6 +128,28 @@ def test_moods_patch_or_put_bad_key(testclient_authenticated):
 
     assert response.status_code == 400
 
+@pytest.mark.unit
+@pytest.mark.moods
+def test_moods_patch_or_put_bad_key(testclient_authenticated):
+    """
+    GIVEN a mood logged to a user
+    WHEN the current time is less than the configured limit
+    THEN the data is not logged and there is a 400
+    """
+    m = Mood("temp")
+    db.session.add(m)
+    db.session.commit()
+
+    # Create a test client using the Flask application configured for testing
+
+    response = testclient_authenticated.patch('/moods/1',json={"mood":"happy"})
+
+    assert response.status_code == 400
+
+    response = testclient_authenticated.put('/moods/1',json={"mood":"happy"})
+
+    assert response.status_code == 400
+
 
 
 @pytest.mark.unit

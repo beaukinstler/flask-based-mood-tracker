@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 
 # api tests authenticated
-@pytest.mark.focus
+
 @pytest.mark.unit
 @pytest.mark.moods
 def test_api_moods_get_page(testclient_authenticated):
@@ -26,7 +26,7 @@ def test_api_moods_get_page(testclient_authenticated):
 # api tests
 
 
-@pytest.mark.focus
+
 @pytest.mark.unit
 @pytest.mark.moods
 def test_api_moods_get_list_of_moods(testclient_authenticated):

@@ -23,13 +23,13 @@ class UserMoodLog(db.Model):
     __tablename__ = 'users_moods'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column('user_id', db.Integer, db.ForeignKey(
-        'users.id'), primary_key=False)
+        'users.id', ondelete="CASCADE"), primary_key=False)
     mood_id = db.Column('mood_id', db.Integer, db.ForeignKey(
         'moods.id'), primary_key=False)
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.datetime.utcnow)
     note = db.Column("notes", db.Text, nullable=True)
-    user = db.relationship('User', back_populates="moods")
+    user = db.relationship('User', back_populates="moods", cascade="all, delete")
     mood = db.relationship('Mood', back_populates="users")
 
     def __init__(self, note=None):
@@ -98,7 +98,7 @@ class User(UserMixin,  db.Model):
     password = db.Column(db.Text, nullable=False)
     moods = db.relationship(
         'UserMoodLog',
-        cascade='all, delete',
+        cascade='all, delete-orphan',
         back_populates="user"
     )
 

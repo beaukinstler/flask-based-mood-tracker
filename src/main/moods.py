@@ -53,7 +53,7 @@ def index():
 @bp.route("/all", methods=['GET'])
 def all():
 
-    moods = db.session.execute(select(Mood).order_by(Mood.id)).scalars().all()
+    moods = db.session.execute(select(Mood).order_by(Mood.id.asc())).scalars().all()
     if moods is None:
         return abort(404)
     return flask_render_template('mood_list.html', moods=moods)
