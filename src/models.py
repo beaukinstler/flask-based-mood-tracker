@@ -27,7 +27,7 @@ class UserMoodLog(db.Model):
     mood_id = db.Column('mood_id', db.Integer, db.ForeignKey(
         'moods.id'), primary_key=False)
     created_at = db.Column(db.DateTime(timezone=True),
-                           default=datetime.datetime.utcnow)
+                           default=datetime.datetime.utcnow(), nullable=False)
     note = db.Column("notes", db.Text, nullable=True)
     user = db.relationship('User', back_populates="moods", cascade="all, delete")
     mood = db.relationship('Mood', back_populates="users")
