@@ -8,7 +8,7 @@ from src.security import pwd_context
 from src import db
 from flask_login import UserMixin
 from sqlalchemy import select
-
+from sqlalchemy.sql.expression import func
 
 
 
@@ -26,8 +26,8 @@ class UserMoodLog(db.Model):
         'users.id', ondelete="CASCADE"), primary_key=False)
     mood_id = db.Column('mood_id', db.Integer, db.ForeignKey(
         'moods.id'), primary_key=False)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           default=datetime.datetime.utcnow(), nullable=False)
+    created_at = db.Column(db.DateTime,
+                           default=func.now())
     note = db.Column("notes", db.Text, nullable=True)
     user = db.relationship('User', back_populates="moods", cascade="all, delete")
     mood = db.relationship('Mood', back_populates="users")
