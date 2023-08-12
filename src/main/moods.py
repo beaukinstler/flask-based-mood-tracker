@@ -16,9 +16,9 @@ bp = Blueprint("moods", __name__, url_prefix="/moods")
 
 class MoodForm(FlaskForm):
     note = TextAreaField('note', validators=[Length(min=0, max=240)], render_kw={'placeholder': '[Optional] Leave a note...'})
-    # happy = SubmitField('Happy',id=5, render_kw={'class': 'btn btn-primary'}, )
-    # sad = SubmitField('Sad',id=2, render_kw={'class': 'btn btn-warning'})
-    # mood = RadioField('Mood', choices=[('1', 'Happy'), ('2', 'Sad')])
+    happy = SubmitField('Happy',id=5, render_kw={'class': 'btn btn-primary'}, )
+    sad = SubmitField('Sad',id=2, render_kw={'class': 'btn btn-warning'})
+
 
 
 @bp.route("", methods=['GET', 'POST'])
@@ -32,11 +32,10 @@ def index():
         else:
             flash('Invalid Form')
             return flask_redirect(url_for('moods.index'))
+        moods = db.session.execute(select(Mood).order_by(Mood.id.asc())).scalars().all()
+        mood_name = [ field for field in flask_request.form if field in [ m.description for m in moods] ].pop()
+        mood = [ mood for mood in moods if mood.description in flask_request.form  ].pop()
 
-        mood_name = flask_request.form['button']
-        token = str(flask_request.form['csrf_token'])
-        mood_query = select(Mood).where(Mood.description==mood_name).limit(1)
-        mood = db.session.execute(mood_query).scalars().one_or_none()
         if mood:
             # mood_description = mood.description
             log = UserMoodLog()

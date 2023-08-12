@@ -10,51 +10,10 @@
     <input hidden type="text" value="" id="mood">
     <div class="d-grid gap-2 mt-3">
         {{ form.note }}
-        <input type="submit" class="btn btn-outline-success" name="button" value="happy" id="1"/>
-        <input type="submit" class="btn btn-outline-primary" name="button" value="sad" id="2"/>
+        {{ form.happy }}
+        {{ form.sad }}
 
     </div>
 </form>
-<!-- <div class="container mt-5">
-    {{ form.csrf_token }}
-    <div class="d-grid gap-2 mt-3">
-      <button id="happy" class="btn btn-outline-success" data-value="1">happy</button>
-      <button id="angry" class="btn btn-outline-primary" data-value="2">angry</button>
-    </div>
-  </div> -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-        button.addEventListener('click', function () {
-            const value = this.getAttribute('data-value');
-            postData(value);
-        });
-        });
 
-        function postData(value) {
-        const crsf = document.getElementById('csrf_token').value;
-        const note = document.getElementById('note').value;
-        const currentLocation = window.location.href;
-        fetch(currentLocation, {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `button=${encodeURIComponent(value)}&csrf_token=${encodeURIComponent(crsf)}&note=${encodeURIComponent(note)}`
-        })
-        .then(response => {
-            if (!response.ok ) {
-            throw new Error('Network response was not ok');
-            }
-            console.log('POST request sent successfully!');
-            // You can optionally redirect to another page after the POST request is successful
-            window.location.href = '/users/me';
-        })
-        .catch(error => {
-            console.error('Error sending POST request:', error);
-        });
-        }
-    });
-    </script>
 {% endblock %}
