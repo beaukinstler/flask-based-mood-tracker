@@ -5,8 +5,8 @@ from ..models import Mood, UserMoodLog, User
 from sqlalchemy.exc import IntegrityError
 from src import db
 from flask_wtf import FlaskForm
-from wtforms import HiddenField
-from wtforms.validators import DataRequired
+from wtforms import HiddenField, TextAreaField, SubmitField, RadioField
+from wtforms.validators import DataRequired, Length
 from flask_login import login_required, current_user
 import requests
 import json
@@ -15,7 +15,10 @@ bp = Blueprint("moods", __name__, url_prefix="/moods")
 
 
 class MoodForm(FlaskForm):
-    mood = HiddenField('mood', validators=[DataRequired()])
+    note = TextAreaField('note', validators=[Length(min=0, max=240)], render_kw={'placeholder': '[Optional] Leave a note...'})
+    # happy = SubmitField('Happy',id=5, render_kw={'class': 'btn btn-primary'}, )
+    # sad = SubmitField('Sad',id=2, render_kw={'class': 'btn btn-warning'})
+    # mood = RadioField('Mood', choices=[('1', 'Happy'), ('2', 'Sad')])
 
 
 @bp.route("", methods=['GET', 'POST'])
@@ -27,27 +30,35 @@ def index():
         if form.validate():
             pass
         else:
-            pass
-        id = int(flask_request.form['button'])
-        token = str(flask_request.form['token'])
-        mood = Mood.query.all()
-        moods = [m for m in mood if m.id == id]
-        if moods:
-            mood = moods[0]
-            mood_description = mood.description
-            response_data = {
-                'message': f"Button {mood_description} pressed!",
-                'token': f"{token}"
-            }
+            flash('Invalid Form')
+            return flask_redirect(url_for('moods.index'))
+
+        mood_name = flask_request.form['button']
+        token = str(flask_request.form['csrf_token'])
+        mood_query = select(Mood).where(Mood.description==mood_name).limit(1)
+        mood = db.session.execute(mood_query).scalars().one_or_none()
+        if mood:
+            # mood_description = mood.description
             log = UserMoodLog()
             log.mood = mood
-            current_user.moods.append(log)
-            # db.session.add(log)
-            db.session.commit()
-            flash(f'Logged your {mood_description} mood...')
-            return flask_redirect(url_for('users.me'))
-
+            log.user = current_user
+            log.note = form.note.data
+            db.session.add(log)
+            try:
+                db.session.commit()
+                flash(f'Logged your {mood.description} mood...')
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+                if str(e).find('check_last_record_time') > 0:
+                    flash(f"You recently logged a mood. It's too soon to log your {mood.description} mood...")
+                else:
+                    flash(f'There was a problem logging your {mood.description} mood...')
+        return flask_redirect(url_for('users.me'))
     return flask_render_template('mood.html', form=form)
+
+
+
 
 
 @bp.route("/all", methods=['GET'])
