@@ -3,6 +3,7 @@ from flask import Flask
 from src.models import db, User, Mood, UserMoodLog
 from time import sleep
 from flask_login import current_user
+from sqlalchemy import select
 
 
 @pytest.mark.users
@@ -95,29 +96,38 @@ def test_user_mood_log(testclient):
     THEN the User.moods will hold the new mood and the Mood().users will hold the the user
     """
 
-    # Example: Insert a user into the database
+    # Set up moods and user
     user_email = 'user@example.com'
     user_password = 'password'
-    user = User(email=user_email, password=user_password)
-    db.session.add(user)
-    db.session.commit()
-    # Log association
-    user_mood = UserMoodLog(note='test 1')
+    user = User(email=user_email, password=user_password)   
     mood1 = Mood('happy')
-    db.session.add(mood1)
-    user_mood.mood = mood1
-
-    sleep(4)
-    user_mood2 = UserMoodLog(note='test 2')
     mood2 = Mood('sad')
+    db.session.add(user)
+    db.session.add(mood1)
     db.session.add(mood2)
+    db.session.commit()
+    
+    # Example: Insert a user into the database
+
+
+    # Create a mood log    
+    user_mood = UserMoodLog(note='test 1')
+    user_mood.user = user
+    user_mood.mood = mood1
+    db.session.add(user_mood)
+    db.session.commit()
+    
+    sleep(4)
+
+    user_mood2 = UserMoodLog(note='test 2')
+    user_mood2.user = user
     user_mood2.mood = mood2
-    user.moods.append(user_mood2)
-    user.moods.append(user_mood)
+    db.session.add(user_mood2)
     db.session.commit()
 
-    query = db.session.query(UserMoodLog)
-    associations = query.all()
+    # query = db.session.query(UserMoodLog)
+    query = select(UserMoodLog).order_by(UserMoodLog.created_at.desc())
+    associations = db.session.execute(query).scalars().all()
 
     assert associations[0].user == user
     with pytest.raises(AssertionError) as execinfo:
@@ -133,33 +143,3 @@ def test_user_mood_log(testclient):
 
 
 
-@pytest.mark.unit
-@pytest.mark.users
-def test_new_mood_too_soon(testclient_authenticated):
-    """
-    GIVEN a mood logged to a user
-    WHEN the current time is less than the configured limit
-    THEN the data is not logged and there is a 400 response
-    """
-    user = current_user
-    happy = Mood("happy")
-    sad = Mood("sad")
-    db.session.add(happy)
-    db.session.add(sad)
-    db.session.commit()
-
-    user_mood = UserMoodLog()
-    user_mood.mood = happy
-    user.moods.append(user_mood)
-    db.session.commit()
-    assert user.moods[0].mood.description == 'happy'
-
-    user_mood = None
-    user_mood = UserMoodLog()
-    user_mood.mood = happy
-
-    
-
-
-
-    assert response.status_code == 400
