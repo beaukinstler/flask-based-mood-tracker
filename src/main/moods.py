@@ -33,10 +33,8 @@ def index():
             flash('Invalid Form')
             return flask_redirect(url_for('moods.index'))
 
-        mood_name = flask_request.form['button']
-        token = str(flask_request.form['csrf_token'])
-        mood_query = select(Mood).where(Mood.description==mood_name).limit(1)
-        mood = db.session.execute(mood_query).scalars().one_or_none()
+        mood_id = flask_request.form['button']
+        mood = db.session.execute(db.select(Mood).filter_by(id=int(mood_id))).scalar_one()
         if mood:
             # mood_description = mood.description
             log = UserMoodLog()
