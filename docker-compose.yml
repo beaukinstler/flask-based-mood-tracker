@@ -1,8 +1,8 @@
 version: '3.4'
 
 services:
-  moody_pg:
-    container_name: moody_pg_container
+  moodsy_pg:
+    container_name: moodsy_pg_container
     image: postgres:14.1-alpine3.15
     restart: unless-stopped
     environment:
@@ -13,19 +13,32 @@ services:
       - "5432:5432"
     volumes:
       - "${PWD}/data/initdb/:/docker-entrypoint-initdb.d/"
-  moody_flask:
-    container_name: moody_flask_container
-    image: docker.io/bkin/moodyflask:latest
+  moodsy_flask:
+    container_name: moodsy_flask_container
+    image: docker.io/bkin/moodsyflask:latest
     restart: unless-stopped
     environment:
-      DATABASE_HOST: moody_pg
+      DATABASE_HOST: moodsy_pg
+      DATABASE_PORT: 5432
+      DATABASE_NAMEq: moodsy
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: 
+      WTF_CSRF_SECRET_KEY: Outtakes-Reformist9-Huff-Machine
+      SECRET_KEY: Outtakes-Reformist9-Huff-Machine
     build:
       context: .
       dockerfile: ./Dockerfile
     ports:
       - 5000:5000
     depends_on:
-      - moody_pg
+      - moodsy_pg
+
+  migrations:
+    build:
+      context: .
+    command: python -m flask db upgrade
+    depends_on:
+      - moodsy_flask
 networks:
   default:
-    name: moody_net
+    name: moodsy_net
