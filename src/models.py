@@ -9,7 +9,7 @@ from src import db
 from flask_login import UserMixin
 from sqlalchemy import select
 from sqlalchemy.sql.expression import func
-
+from pytz import timezone
 
 
 
@@ -49,12 +49,17 @@ class UserMoodLog(db.Model):
     def __lt__(self, other):
         return self.created_at < other.created_at and self.user == other.user
 
-    def serialize(self):
+    def serialize(self, userTimeZone=None,fmt='%Y-%m-%d %I:%M %p'):
+        if not userTimeZone:
+            userTimeZone = 'UTC' if self.user.timezone == None else self.user.timezone  
+        tz=timezone(userTimeZone)
+        local_datetime = self.created_at.astimezone(tz)
+        formatted_date = local_datetime.strftime(fmt)
         response = {
             "user": f"{self.user}",
             "mood_description": f"{self.mood.description}",
             "note": f"{self.note}",
-            "date": f"{self.created_at}",
+            "date": f"{formatted_date}",
         }
 
         return response
@@ -96,6 +101,7 @@ class User(UserMixin,  db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.Text, nullable=False, unique=True)
     password = db.Column(db.Text, nullable=False)
+    timezone = 'US/Eastern'
     moods = db.relationship(
         'UserMoodLog',
         cascade='all, delete-orphan',
@@ -130,6 +136,12 @@ class User(UserMixin,  db.Model):
         result = [ {"mood":str(i.mood),"time":i.created_at} for i in self.moods ]
 
         return result
+    
+    def get_localized_log(self):
+        result = [ i.serialize() for i in self.moods ]
+
+        return result
+
 
     def get_id(self):
         """Return the email address to satisfy Flask-Login's requirements."""

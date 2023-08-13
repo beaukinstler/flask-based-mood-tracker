@@ -17,10 +17,10 @@ def index():
 @bp.route("/me", methods=['GET'])
 @login_required
 def me():
-    result = current_user.serialize()
-    moods = current_user.get_simple_moods()
+    serialized = current_user.serialize()
+    moods = current_user.get_localized_log()
     moods.reverse()
-    return render_template('me.html', user_data=result, moods=moods)
+    return render_template('me.html', user_data=serialized, moods=moods)
 
 
 @bp.route("/all", methods=['GET'])

@@ -117,7 +117,7 @@ def test_user_mood_log(testclient):
     db.session.add(user_mood)
     db.session.commit()
     
-    sleep(4)
+    sleep(61)
 
     user_mood2 = UserMoodLog(note='test 2')
     user_mood2.user = user
