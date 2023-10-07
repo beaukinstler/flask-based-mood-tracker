@@ -33,6 +33,18 @@ def index():
             flash('Invalid Form')
             return flask_redirect(url_for('moods.index'))
         moods = db.session.execute(select(Mood).order_by(Mood.id.asc())).scalars().all()
+        # ensure we have at least 2 moods, happy and sad
+        if moods == []:
+            try:
+                happy = Mood('happy')
+                sad = Mood('sad')
+                db.session.add(happy)
+                db.session.add(sad)
+                db.commit()
+            except Exception as e:
+                print(e)
+                db.session.rollback()
+                abort(400, description="No mood types found and unable to create them")
         mood_name = [ field for field in flask_request.form if field in [ m.description for m in moods] ].pop()
         mood = [ mood for mood in moods if mood.description in flask_request.form  ].pop()
 
