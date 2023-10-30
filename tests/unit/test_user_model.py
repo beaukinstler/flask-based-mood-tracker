@@ -25,7 +25,6 @@ def test_model_update(testclient):
     assert user_from_db.id == 1
 
 
-
 @pytest.mark.users
 @pytest.mark.unit
 def test_model_update(testclient):
@@ -49,7 +48,7 @@ def test_model_update(testclient):
         db.session.commit()
         assert user.id == 2
     db.session.rollback()
-    
+
     user_email = 'nondup@example.com'
 
     user2 = User(email=user_email, password=user_password)

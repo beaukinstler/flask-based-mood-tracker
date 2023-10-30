@@ -15,10 +15,11 @@ bp = Blueprint("moods", __name__, url_prefix="/moods")
 
 
 class MoodForm(FlaskForm):
-    note = TextAreaField('note', validators=[Length(min=0, max=240)], render_kw={'placeholder': '[Optional] Leave a note...'})
-    happy = SubmitField('Happy',id=5, render_kw={'class': 'btn btn-primary'}, )
-    sad = SubmitField('Sad',id=2, render_kw={'class': 'btn btn-warning'})
-
+    note = TextAreaField('note', validators=[Length(min=0, max=240)], render_kw={
+                         'placeholder': '[Optional] Leave a note...'})
+    happy = SubmitField('Happy', id=5, render_kw={
+                        'class': 'btn btn-primary'}, )
+    sad = SubmitField('Sad', id=2, render_kw={'class': 'btn btn-warning'})
 
 
 @bp.route("", methods=['GET', 'POST'])
@@ -32,7 +33,8 @@ def index():
         else:
             flash('Invalid Form')
             return flask_redirect(url_for('moods.index'))
-        moods = db.session.execute(select(Mood).order_by(Mood.id.asc())).scalars().all()
+        moods = db.session.execute(
+            select(Mood).order_by(Mood.id.asc())).scalars().all()
         # ensure we have at least 2 moods, happy and sad
         if moods == []:
             try:
@@ -40,13 +42,14 @@ def index():
                 sad = Mood('sad')
                 db.session.add(happy)
                 db.session.add(sad)
-                db.commit()
+                db.session.commit()
             except Exception as e:
                 print(e)
                 db.session.rollback()
                 abort(400, description="No mood types found and unable to create them")
-        mood_name = [ field for field in flask_request.form if field in [ m.description for m in moods] ].pop()
-        mood = [ mood for mood in moods if mood.description in flask_request.form  ].pop()
+        mood_name = [field for field in flask_request.form if field in [
+            m.description for m in moods]].pop()
+        mood = [mood for mood in moods if mood.description in flask_request.form].pop()
 
         if mood:
             # mood_description = mood.description
@@ -62,24 +65,23 @@ def index():
                 db.session.rollback()
                 print(e)
                 if str(e).find('check_last_record_time') > 0:
-                    flash(f"You recently logged a mood. It's too soon to log your {mood.description} mood...")
+                    flash(
+                        f"You recently logged a mood. It's too soon to log your {mood.description} mood...")
                 else:
-                    flash(f'There was a problem logging your {mood.description} mood...')
+                    flash(
+                        f'There was a problem logging your {mood.description} mood...')
         return flask_redirect(url_for('users.me'))
     return flask_render_template('mood.html', form=form)
-
-
-
 
 
 @bp.route("/all", methods=['GET'])
 def all():
 
-    moods = db.session.execute(select(Mood).order_by(Mood.id.asc())).scalars().all()
+    moods = db.session.execute(
+        select(Mood).order_by(Mood.id.asc())).scalars().all()
     if moods is None:
         return abort(404)
     return flask_render_template('mood_list.html', moods=moods)
-
 
 
 @bp.route("/create", methods=['POST'])
