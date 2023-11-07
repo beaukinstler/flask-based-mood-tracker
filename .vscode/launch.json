@@ -186,6 +186,23 @@
             ]
         },
         {
+            "name": "pytest admin",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_APP": "wsgi.py",
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
+            },
+            "args": [
+                "-v",
+                "-m admin"
+            ]
+        },
+        {
             "name": "pytest auth",
             "type": "python",
             "request": "launch",

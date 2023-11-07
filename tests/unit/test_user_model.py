@@ -57,3 +57,20 @@ def test_model_update(testclient):
     assert user2.id == 2
 
 
+@pytest.mark.admin
+@pytest.mark.users
+@pytest.mark.unit
+def test_model_update(testclient):
+    """
+    GIVEN a new user
+    WHEN first created
+    THEN then user.is_admin returns "False"
+    """
+
+    # Example: Insert a user into the database
+    user_email = 'user01@example.com'
+    user_password = 'password'
+    user = User(email=user_email, password=user_password)
+    db.session.add(user)
+    db.session.commit()
+    assert user.is_admin == False
