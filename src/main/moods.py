@@ -43,6 +43,8 @@ def index():
                 db.session.add(happy)
                 db.session.add(sad)
                 db.session.commit()
+                moods = db.session.execute(
+                    select(Mood).order_by(Mood.id.asc())).scalars().all()
             except Exception as e:
                 print(e)
                 db.session.rollback()
