@@ -15,7 +15,8 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 
-
+migrate = Migrate()
+bootstrap = Bootstrap5()
 
 
 
@@ -30,8 +31,8 @@ def create_app():
     app.config.from_pyfile(config_file, silent=True)
 
     db.init_app(app)
-    migrate = Migrate(app, db)
-    bootstrap = Bootstrap5(app)
+    migrate.init_app(app, db)
+    bootstrap.init_app(app)
 
     # initialize login managers with app
     login_manager.init_app(app)
