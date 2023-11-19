@@ -25,5 +25,14 @@
 LICENSE
 README.md
 **/*.md
+**/*.md
 **/*.bak
-venv
+**/*.backup
+**/venv
+**/.venv
+**/data
+**/container_entrypoint
+**/instance
+**/.github
+**/tests
+**/*_bak
