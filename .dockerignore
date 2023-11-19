@@ -36,3 +36,5 @@ README.md
 **/.github
 **/tests
 **/*_bak
+**/temp
+**/pytest.ini
