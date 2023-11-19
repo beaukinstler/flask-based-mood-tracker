@@ -13,6 +13,24 @@ services:
       - "5432:5432"
     volumes:
       - "${PWD}/data/initdb/:/docker-entrypoint-initdb.d/"
+      - "moodsy_pg_data:/var/lib/postgresql/data/"
+
+  pgadmin:
+    container_name: moodsy_pgadmin_container
+    image: dpage/pgadmin4:6.4
+    restart: always
+    environment:
+        PGADMIN_DEFAULT_EMAIL: test@example.com
+        PGADMIN_DEFAULT_PASSWORD: 123123"
+        PGADMIN_LISTEN_PORT: 5433
+        PGADMIN_CONFIG_SERVER_MODE: "False"
+        PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+        PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: "False"
+    ports:
+      - "5433:5433"
+    depends_on:
+        - moodsy_pg
+
   moodsy_flask:
     container_name: moodsy_flask_container
     image: docker.io/bkin/moodsyflask:latest
@@ -20,7 +38,7 @@ services:
     environment:
       DATABASE_HOST: moodsy_pg
       DATABASE_PORT: 5432
-      DATABASE_NAMEq: moodsy
+      DATABASE_NAME: moody
       DATABASE_USER: postgres
       DATABASE_PASSWORD: 
       WTF_CSRF_SECRET_KEY: Outtakes-Reformist9-Huff-Machine
@@ -30,15 +48,22 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 5000:5000
+    volumes:
+      - "${PWD}/container_entrypoint/:/app/custom_entrypoint/"
     depends_on:
       - moodsy_pg
+    entrypoint: 
+      - bash
+      - /app/custom_entrypoint/entrypoint.sh
 
-  migrations:
-    build:
-      context: .
-    command: python -m flask db upgrade
-    depends_on:
-      - moodsy_flask
+  # migrations:
+  #   build:
+  #     context: /app
+  #   command: python -m flask db upgrade
+  #   depends_on:
+  #     - moodsy_flask
 networks:
   default:
     name: moodsy_net
+volumes:
+  moodsy_pg_data: 
