@@ -15,22 +15,6 @@ services:
       - "${PWD}/data/initdb/:/docker-entrypoint-initdb.d/"
       - "moodsy_pg_data:/var/lib/postgresql/data/"
 
-  pgadmin:
-    container_name: moodsy_pgadmin_container
-    image: dpage/pgadmin4:6.4
-    restart: always
-    environment:
-        PGADMIN_DEFAULT_EMAIL: test@example.com
-        PGADMIN_DEFAULT_PASSWORD: 123123"
-        PGADMIN_LISTEN_PORT: 5433
-        PGADMIN_CONFIG_SERVER_MODE: "False"
-        PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
-        PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: "False"
-    ports:
-      - "5433:5433"
-    depends_on:
-        - moodsy_pg
-
   moodsy_flask:
     container_name: moodsy_flask_container
     image: docker.io/bkin/moodsyflask:latest
@@ -55,6 +39,10 @@ services:
     entrypoint: 
       - bash
       - /app/custom_entrypoint/entrypoint.sh
+    networks:
+      - network1
+      - default
+
 
   # migrations:
   #   build:
@@ -65,5 +53,8 @@ services:
 networks:
   default:
     name: moodsy_net
+  network1:
+    name: swag
+    external: true
 volumes:
   moodsy_pg_data: 
