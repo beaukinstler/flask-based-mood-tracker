@@ -10,7 +10,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
       PGUSER: postgres
     ports:
-      - "5432:5432"
+      - "5432"
     volumes:
       - "${PWD}/data/initdb/:/docker-entrypoint-initdb.d/"
       - "moodsy_pg_data:/var/lib/postgresql/data/"
