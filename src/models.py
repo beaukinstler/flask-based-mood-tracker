@@ -107,6 +107,7 @@ class User(UserMixin,  db.Model):
         cascade='all, delete-orphan',
         back_populates="user"
     )
+    is_admin = False
 
     def __init__(self, email, password):
         self.email = email

@@ -7,7 +7,9 @@
 
     <li><a href="{{ url_for('moods.all') }}">Mood Types</a></li>
     {% if current_user.is_authenticated %}
+    {% if current_user.is_admin %}
     <li><a href="{{ url_for('users.all_users') }}">All Users</a></li>
+    {% endif %}
     <li><a href="{{ url_for('moods.index') }}">Update Mood</a></li>
     <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
     {% else %}

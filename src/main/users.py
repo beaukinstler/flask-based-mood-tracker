@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request as flask_request, render_template
+from flask import Blueprint, jsonify, request as flask_request, render_template, abort
 from ..models import User
 from src import db
 from sqlalchemy.exc import IntegrityError
@@ -26,11 +26,14 @@ def me():
 @bp.route("/all", methods=['GET'])
 @login_required
 def all_users():
-    users = User.query.all()
-    result = []
-    for user in users:
-        result.append(user.serialize())
-    return jsonify(result)
+    if current_user.is_admin:
+        users = User.query.all()
+        result = []
+        for user in users:
+            result.append(user.serialize())
+        return jsonify(result)
+    else:
+        return abort(400)
 
 
 # @bp.route("", methods=['POST'])
