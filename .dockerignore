@@ -38,3 +38,4 @@ README.md
 **/*_bak
 **/temp
 **/pytest.ini
+**/.pytest_cache*
