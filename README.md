@@ -4,7 +4,7 @@
 
 Configs are in config.py.
 
-You can also use a .env file
+You can also use a .env file to store environment variables. 
 
 For tests, use tests/test_config.py
 

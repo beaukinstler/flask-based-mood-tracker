@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Me</h1>
+<ul>
+  <div>
+    <div>id: <stong>{{ user_data.user_id }}</stong></div>
+    <div>email: <stong>{{ user_data.user_email }}</stong></div>
+  </div>
+
+</ul>
+{% if moods %}
+
+<h4>Last Mood Logged</h4>
+<table class="table">
+  <thead">
+    <tr>
+
+      <th scope="col">
+        mood<stong>
+      </th>
+      <th scope="col">
+        time<stong>
+      </th>
+      <th scope="col">
+        note<stong>
+      </th>
+
+    </tr>
+    </thead>
+
+    <tbody>
+
+      <tr scope="row" class="row-{{moods[0].mood_description}}">
+
+        <td>
+          {{ moods[0].mood_description }}
+        </td>
+
+
+        <td>
+          {{ moods[0].date }}
+        </td>
+
+
+
+        <td>
+          {{ '' if moods[0].note == None else moods[0].note }}
+        </td>
+      </tr>
+
+    </tbody>
+</table>
+
+<h4>Past Moods</h4>
+<table class="table past-moods" >
+  <thead">
+    <tr>
+
+      <th scope="col">
+        mood<stong>
+      </th>
+      <th scope="col">
+        time<stong>
+      </th>
+      <th scope="col">
+        note<stong>
+      </th>
+
+    </tr>
+    </thead>
+
+    <tbody>
+      {% for mood in moods[1:] %}
+      <tr scope="row" class="row-{{mood.mood_description}}">
+        <td>
+          {{ mood.mood_description }}
+        </td>
+        <td>
+          {{ mood.date }}
+        </td>
+
+      <td>
+        {{ '' if mood.note == None else mood.note }}
+        </td>
+    </tr>
+      {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+
+
+{% endblock %}

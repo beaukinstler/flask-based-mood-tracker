@@ -10,6 +10,7 @@ from src import db
 from sqlalchemy.exc import IntegrityError
 from flask_login import login_user, current_user
 from werkzeug.urls import url_parse
+from time import time
 
 bp = Blueprint("api_auth", __name__, url_prefix="/api.v1/auth")
 
@@ -26,11 +27,14 @@ def login():
     # see https://flask.palletsprojects.com/en/2.3.x/tutorial/views/ docs as well as
     # https://blog.pip.com/post/the-flask-mega-tutorial-part-v-user-logins/page/19
     # for my inspiration with all this
-    form = LoginForm()
+
     # my valudate on submit isn't working. Added the POST check, at least for API
-    if form.validate_on_submit() or flask_request.method == 'POST':
+    if flask_request.method == 'POST':
         user = db.session.query(User).filter(
-            User.email == form.data['username']).scalar()
+            User.email == flask_request.data['username']).scalar()
+        if user is None:
+            flash('Bad username or password.')
+            return flask_redirect(url_for('auth.login'))
         user.login(form.data['password'])
         if user is None or not user.is_authenticated:
             flash('Bad username or password.')
@@ -50,9 +54,9 @@ def login():
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
-    if flask_request.method == 'POST':
-        username = flask_request.form['username']
-        password = flask_request.form['password']
+    if flask_request.method == 'POST' and flask_request.content_type == 'application/json':
+        username = flask_request.json.get("username")
+        password = flask_request.json.get("password")
         error = None
 
         if not username:
@@ -68,13 +72,17 @@ def register():
             except IntegrityError:
                 error = f"User {username} is already registered."
             else:
-                return flask_redirect(url_for("auth.login"))
+                return jsonify(new_user.serialize())
+        
 
-        flash(error)
+    # from here is an error response
+    message = "Your registration didn't work. Ensure you send 'application/json' with 'username' and 'password'."
+    flask_request.json.update({"message":message, "error":error})
 
-    return flask_render_template('auth/register.html')
+    return jsonify(flask_request.json)
 
 
 @bp.route('/logout')
 def logout():
-    return 'Logout'
+    message = {"user logged out":current_user,"datetime":time.now()}
+    return jsonify(message)

@@ -11,29 +11,49 @@ https://johncox-38620.medium.com/creating-a-test-database-pytest-sqlalchemy-9735
 
 import pytest
 from src import create_app
-from src.models import db
+from src.models import db, User
+from dotenv import load_dotenv
+from flask_login import login_user, current_user, logout_user
+from src.models import User
+
+@pytest.fixture(scope='session', autouse=True)
+def load_env():
+    load_dotenv(dotenv_path=".env_test")
 
 
 @pytest.fixture()
 def app():
-    test_config = "..\\tests\\testing_config.py"
-    app = create_app(test_config)
-    app.config.update({
-        "TESTING": True,
-        'SERVER_NAME': 'localhost:5000'
-    })
+
+    app = create_app()
+ 
 
     # Initialize the database
-    db.init_app(app)
+    #db.init_app(app)
     with app.app_context():
         db.create_all()
 
         yield app
-
+        db.session.close()
         # Teardown - Drop all database tables
         db.drop_all()
 
 
 @pytest.fixture()
 def testclient(app):
-    return app.test_client()
+    yield app.test_client()
+
+
+@pytest.fixture()
+def testclient_authenticated(app):
+    testclient = app.test_client()
+    username= 'test@example.com'
+    password = 'password'
+    user = User(username,password)
+    db.session.add(user)
+    db.session.commit()
+    with testclient:
+        login_user(user, remember=True)
+        
+    yield testclient
+
+

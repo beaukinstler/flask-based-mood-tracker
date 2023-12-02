@@ -81,3 +81,38 @@ Based on the SQLAlchemy docs, I've decided to use [Association Object](https://d
 
 
 
+### azure
+```
+az group create --name moody-flask --location eastus
+az aks create --resource-group moody-flask --name flaskcluster --node-count 1 --generate-ssh-keys
+az aks get-credentials --resource-group moody-flask --name flaskcluster
+kubectl get nodes
+
+$ kubectl.exe get nodes
+NAME                                STATUS   ROLES   AGE     VERSION
+aks-nodepool1-11853184-vmss000000   Ready    agent   7m19s   v1.25.6
+
+
+az acr create --resource-group moody-flask --name bkinmoodyflask --sku Basic
+
+$ az acr show-endpoints --name bkinmoodyflask
+←[93mTo configure client firewall w/o using wildcard storage blob urls, use "az acr update --name bkinmoodyflask --data-endpoint-enabled" to enable dedicated data endpoints.←[0m
+{
+  "dataEndpoints": [
+    {
+      "endpoint": "*.blob.core.windows.net",
+      "region": "eastus"
+    }
+  ],
+  "loginServer": "bkinmoodyflask.azurecr.io"
+}
+
+loginServer": "bkinmoodyflask.azurecr.io
+
+
+az aks update -n flaskcluster -g moody-flask --attach-acr bkinmoodyflask
+
+
+kubectl create deployment primary --image=bkinmoodyflask.azurecr.io/moodyflask:v0.2
+
+```

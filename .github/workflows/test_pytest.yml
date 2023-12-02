@@ -20,6 +20,13 @@ jobs:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
     runs-on: ubuntu-22.04
+    env:
+      TESTING: True
+      DATABASE_URL: "sqlite:///test.db"
+      FLASK_ENV: development
+      WTF_CSRF_SECRET_KEY: "7K6VpJ7VA5akurC2FPjKLJKWuFws9ZV9Pcm9KKb4"
+      SECRET_KEY: "GithubActionsSecretKeyForFlask"
+
     steps:
       # Runs a single command using the runners shell, using run:
       - run: echo "Job automatically triggered by event ${{ github.event_name }}."
@@ -46,12 +53,18 @@ jobs:
 
       - run: echo "Python has been set up"
 
+      - name: Echo vars
+        run: |
+          echo "Testing the env vars"
+          echo "$TEST_DATABASE_URL"
+          echo "$SECRET_KEY"
+
       - name: Run pip to upgrade pip and install
         run: |
           echo "Running test"
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Run pytest full
+      - name: Run pytest setup
         run: |
           python -m pytest -v

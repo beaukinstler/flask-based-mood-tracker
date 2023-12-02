@@ -1,0 +1,60 @@
+version: '3.4'
+
+services:
+  moodsy_pg:
+    container_name: moodsy_pg_container
+    image: postgres:14.1-alpine3.15
+    restart: unless-stopped
+    env_file:
+      - .env_example
+
+    ports:
+      - "5432"
+    volumes:
+      - "${PWD}/data/initdb/:/docker-entrypoint-initdb.d/"
+      - "moodsy_pg_data_dev:/var/lib/postgresql/data/"
+
+  # pgadmin:
+  #   container_name: moodsy_pgadmin_container
+  #   image: dpage/pgadmin4:6.4
+  #   restart: always
+  #   environment:
+  #       PGADMIN_DEFAULT_EMAIL: test@example.com
+  #       PGADMIN_DEFAULT_PASSWORD: 123123"
+  #       PGADMIN_LISTEN_PORT: 5433
+  #       PGADMIN_CONFIG_SERVER_MODE: "False"
+  #       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+  #       PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: "False"
+  #   ports:
+  #     - "5433:5433"
+  #   depends_on:
+  #       - moodsy_pg
+
+  moodsy_flask:
+    container_name: moodsy_flask_container
+    image: docker.io/bkin/moodsyflask:latest
+    restart: unless-stopped
+    environment:
+      DATABASE_HOST: moodsy_pg
+      DATABASE_PORT: 5432
+    env_file:
+      - .env_example
+    # build:
+    #   context: .
+    #   dockerfile: ./Dockerfile
+    ports:
+      - 55055:5000
+    volumes:
+      - "${PWD}/container_entrypoint/:/app/custom_entrypoint/"
+    depends_on:
+      - moodsy_pg
+    entrypoint: 
+      - bash
+      - /app/custom_entrypoint/entrypoint.sh
+
+ 
+networks:
+  default:
+    name: moodsy_net_dev
+volumes:
+  moodsy_pg_data_dev: 

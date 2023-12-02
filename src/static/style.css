@@ -1,0 +1,41 @@
+
+
+table {
+  border-collapse: separate; 
+  border-spacing: 1em;
+}
+
+.row-sad {
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(190, 243, 243);
+  padding: 100em ;
+
+}
+
+.row-happy {
+  justify-content: center;
+  align-items: center;
+  background-color:rgb(175, 220, 165);
+  padding: 100em;
+}
+
+
+.container {
+
+  background-color: rgb(224, 240, 240);
+
+
+}
+
+
+.past-moods {
+  background-color: rgb(228, 225, 236);
+
+
+}
+
+main{
+  padding-top: 4px;
+  padding-bottom: 8px;
+}

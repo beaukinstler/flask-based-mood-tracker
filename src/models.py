@@ -6,6 +6,12 @@ from sqlalchemy.sql import func
 import datetime
 from src.security import pwd_context
 from src import db
+from flask_login import UserMixin
+from sqlalchemy import select
+from sqlalchemy.sql.expression import func
+from pytz import timezone
+
+
 
 
 class UserMoodLog(db.Model):
@@ -17,18 +23,24 @@ class UserMoodLog(db.Model):
     __tablename__ = 'users_moods'
     id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column('user_id', db.Integer, db.ForeignKey(
-        'users.id'), primary_key=False)
+        'users.id', ondelete="CASCADE"), primary_key=False)
     mood_id = db.Column('mood_id', db.Integer, db.ForeignKey(
         'moods.id'), primary_key=False)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           default=datetime.datetime.utcnow)
+    created_at = db.Column(db.DateTime,
+                           default=func.now())
     note = db.Column("notes", db.Text, nullable=True)
-    user = db.relationship('User', back_populates="moods")
+    user = db.relationship('User', back_populates="moods", cascade="all, delete")
     mood = db.relationship('Mood', back_populates="users")
 
-    def __init__(self, note):
+    def __init__(self, note=None):
         if not None == note and note != "":
             self.note = note
+
+    def __str__(self):
+        return str(f"user {self.user_id} was {self.mood.description} at {self.created_at}.")
+
+    def __repr__(self):
+        return str("UserMoodLog<id:", self.id) + f"{str(self.serialize())}>"
 
     # for sorting based on info here https://portingguide.readthedocs.io/en/latest/comparisons.html
     def __eq__(self, other):
@@ -37,11 +49,26 @@ class UserMoodLog(db.Model):
     def __lt__(self, other):
         return self.created_at < other.created_at and self.user == other.user
 
+    def serialize(self, userTimeZone=None,fmt='%Y-%m-%d %I:%M %p'):
+        if not userTimeZone:
+            userTimeZone = 'UTC' if self.user.timezone == None else self.user.timezone  
+        tz=timezone(userTimeZone)
+        local_datetime = self.created_at.astimezone(tz)
+        formatted_date = local_datetime.strftime(fmt)
+        response = {
+            "user": f"{self.user}",
+            "mood_description": f"{self.mood.description}",
+            "note": f"{self.note}",
+            "date": f"{formatted_date}",
+        }
+
+        return response
+
 
 class Mood(db.Model):
     __tablename__ = 'moods'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    description = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=False, unique=True)
     users = db.relationship(
         'UserMoodLog',
         cascade='all, delete',
@@ -50,8 +77,6 @@ class Mood(db.Model):
 
     def __init__(self, description):
         self.description = description
-        db.session.add(self)
-        db.session.commit()
 
     def __str__(self):
         return f"{self.description}"
@@ -71,48 +96,28 @@ class Mood(db.Model):
         db.session.commit()
 
 
-class User(db.Model):
+class User(UserMixin,  db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.Text, nullable=False)
+    email = db.Column(db.Text, nullable=False, unique=True)
     password = db.Column(db.Text, nullable=False)
+    timezone = 'US/Eastern'
     moods = db.relationship(
         'UserMoodLog',
-        cascade='all, delete',
+        cascade='all, delete-orphan',
         back_populates="user"
     )
-    _is_active = False
-    _is_anonymous = True
-    _is_authenticated = False
-
-    # properties for flask_login
-    @property
-    def is_active(self):
-        return self._is_active
-
-    @is_active.setter
-    def is_active(self, new_active):
-        self._is_active = new_active
-
-    @property
-    def is_authenticated(self):
-        return self._is_authenticated
-
-    @is_authenticated.setter
-    def is_authenticated(self, new_authenticated):
-        self._is_authenticated = new_authenticated
-
-    @property
-    def is_anonymous(self):
-        return self._is_anonymous
-
-    @is_anonymous.setter
-    def is_anonymous(self, new_anis_anonymous):
-        self._is_anonymous = new_anis_anonymous
+    is_admin = False
 
     def __init__(self, email, password):
         self.email = email
         self.password = pwd_context.hash(password)
+
+    def __repr__(self):
+        return str(f"User<id:{self.id}, email:{self.email}>")
+
+    def __str__(self):
+        return str(self.email)
 
     def __eq__(self, other):
         return self.email == other.email and self.id == other.id
@@ -120,19 +125,32 @@ class User(db.Model):
     def serialize(self):
         response = {
             "user_id": f"{self.id}",
-            "user_email": f"{self.email}"
+            "user_email": f"{self.email}",
+            "mood": f'{"" if not self.moods else sorted(self.moods)[-1].serialize()}'
         }
         return response
 
     def get_moods(self):
-        return [mood.serialize for mood in self.moods]
+        return [mood.serialize() for mood in sorted(self.moods)]
+
+    def get_simple_moods(self):
+        result = [ {"mood":str(i.mood),"time":i.created_at} for i in self.moods ]
+
+        return result
+    
+    def get_localized_log(self):
+        result = [ i.serialize() for i in self.moods ]
+
+        return result
+
 
     def get_id(self):
         """Return the email address to satisfy Flask-Login's requirements."""
         return self.email
 
     def verify_password(self, passwrd_given):
-        return pwd_context.verify_and_update(str(passwrd_given), self.password)
+        result = pwd_context.verify_and_update(str(passwrd_given), self.password)
+        return result[0] # result is a tuple, first item is boolean
 
     def login(self, password):
         if self.verify_password(password):
@@ -145,9 +163,7 @@ class User(db.Model):
             self._is_active = False
 
     def logout(self):
-
-        self._is_authenticated = False
-        self.is_active = False
+        pass
 
 
 # user loader for the Flask-Login module
@@ -155,90 +171,11 @@ class User(db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
+    result = None
     try:
-        found_user = User.query.get(1)
+        found_user = db.session.execute(select(User).where(User.email == user_id)).scalars().first()
     except:
         found_user = None
-    if None is not found_user:
-        result = found_user
+    result = found_user
     return result
 
-
-#####
-# Examples of many to many
-#####
-# teachers_students = db.Table(
-#     'teachers_students',
-#     db.Column('id', db.Integer, primary_key=True, autoincrement=True),
-#     db.Column('teacher_id', db.Integer, db.ForeignKey(
-#         'teachers.id'), primary_key=True),
-#     db.Column('student_id', db.Integer, db.ForeignKey(
-#         'students.id'), primary_key=True),
-#     db.Column('grade', db.Integer, default=100),
-#     db.Column('class_name', db.String)    # adding multi_column uniqe contraint
-#     # found example here https://gist.github.com/asyd/3cff61ed09eabe187d3fbec2c8a3ee39
-#     # but it's for a class, to guessed on the syntax.
-#     # `flask db migrate` showed : Detected added unique constraint 'unique_class_teach_student' on '['class_name', 'teacher_id', 'student_id']'
-
-#     , db.UniqueConstraint('class_name', 'teacher_id', 'student_id', name='unique_class_teach_student')
-# )
-
-
-# class Teacher(db.Model):
-#     __tablename__ = 'teachers'
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     name = db.Column(db.Text, nullable=False)
-#     students = db.relationship(
-#         'Student', secondary=teachers_students,
-#         lazy='subquery',
-#         backref=db.backref('teachers', lazy=True),
-#         cascade='all, delete'
-#     )
-
-#     def __init__(self, name):
-#         self.name = name
-#         db.session.commit()
-
-#     def __str__(self):
-#         return f"{self.name}"
-
-#     def __repr__(self):
-#         return f"id:{self.id}, name:{self.name}"
-
-#     def serialize(self):
-#         response = {
-#             "id": f"{self.id}",
-#             "name": f"{self.name}",
-#             "students": [student.name for student in self.students]
-#         }
-#         return response
-
-
-# class Student(db.Model):
-#     __tablename__ = 'students'
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     name = db.Column(db.Text, nullable=False)
-
-#     def __init__(self, name):
-#         self.name = name
-#         db.session.commit()
-
-#     def __str__(self):
-#         return f"{self.name}"
-
-#     def __repr__(self):
-#         return f"id:{self.id}, name:{self.name}"
-
-#     def serialize(self):
-#         response = {
-#             "id": f"{self.id}",
-#             "name": f"{self.name}",
-#             "teachers": self.get_all_teachers()
-#         }
-#         return response
-
-#     def get_all_teachers(self):
-#         result = []
-#         for t in self.teachers:
-#             result.append(t.name)
-#         return result
