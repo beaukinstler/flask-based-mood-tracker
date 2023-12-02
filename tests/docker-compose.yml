@@ -10,7 +10,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
       PGUSER: postgres
     ports:
-      - "5432:5432"
+      - "5432"
     volumes:
       - "${PWD}/data/initdb/:/docker-entrypoint-initdb.d/"
   test_moody_flask:
@@ -19,9 +19,6 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_HOST: test_moody_pg
-    build:
-      context: .
-      dockerfile: ./Dockerfile
     ports:
       - 5000:5000
     depends_on:
