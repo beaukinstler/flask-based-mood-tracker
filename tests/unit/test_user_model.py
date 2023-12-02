@@ -84,11 +84,7 @@ def test_initial_user(testclient):
     WHEN first created
     THEN then user exists
     """
-    user_email = 'user01@example.com'
-    user_password = 'password'
-    user = User(email=user_email, password=user_password)
-    db.session.add(user)
-    db.session.commit()
+ 
     # Example: Insert a user into the database
     loaded_user = User.query.first()
     assert loaded_user is not None
