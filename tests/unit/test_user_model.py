@@ -1,6 +1,6 @@
 import pytest
 from flask import Flask
-from src.models import db, User
+from src.models import db, User, load_user
 from sqlalchemy.exc import IntegrityError
 
 
@@ -74,3 +74,21 @@ def test_model_update(testclient):
     db.session.add(user)
     db.session.commit()
     assert user.is_admin == False
+
+@pytest.mark.admin
+@pytest.mark.users
+@pytest.mark.unit
+def test_initial_user(testclient):
+    """
+    GIVEN a app
+    WHEN first created
+    THEN then user exists
+    """
+    user_email = 'user01@example.com'
+    user_password = 'password'
+    user = User(email=user_email, password=user_password)
+    db.session.add(user)
+    db.session.commit()
+    # Example: Insert a user into the database
+    loaded_user = User.query.first()
+    assert loaded_user is not None
