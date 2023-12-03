@@ -48,3 +48,9 @@ TESTING = True
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY')
+
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
+ADMIN_USERNAME = "admin@example.com" if not ADMIN_USERNAME else ADMIN_USERNAME
+
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
+ADMIN_PASSWORD = "admin@example.com" if not ADMIN_PASSWORD else ADMIN_PASSWORD

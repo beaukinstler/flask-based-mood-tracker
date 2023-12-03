@@ -76,9 +76,7 @@ def test_model_update(testclient):
     assert user.is_admin == False
 
 @pytest.mark.admin
-@pytest.mark.users
-@pytest.mark.unit
-def test_initial_user(testclient):
+def test_initial_user(app):
     """
     GIVEN a app
     WHEN first created
@@ -86,5 +84,20 @@ def test_initial_user(testclient):
     """
  
     # Example: Insert a user into the database
-    loaded_user = User.query.first()
+    with app.app_context():
+        loaded_user = User.query.first()
     assert loaded_user is not None
+
+
+@pytest.mark.admin
+def test_initial_user(app):
+    """
+    GIVEN a app
+    WHEN first created
+    THEN then user exists
+    """
+ 
+    # Example: Insert a user into the database
+    with app.app_context():
+        loaded_user = User.query.first()
+    assert loaded_user.is_admin == True
