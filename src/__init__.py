@@ -41,8 +41,7 @@ def create_app():
     with app.app_context():
         if os.environ.get('FLASK_ENV') == 'development':
             db.create_all()
-        else:
-            db.create_all()
+ 
         
         #######
         # importing and registering the bluprints from the api folder
