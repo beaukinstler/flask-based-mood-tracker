@@ -58,8 +58,12 @@ jobs:
       - name: Echo vars
         run: |
           echo "Testing the env vars"
-          echo "$TEST_DATABASE_URL"
+          echo "$DATABASE_URL"
           echo "$SECRET_KEY"
+          echo "$ADMIN_USERNAME"
+          echo "$ADMIN_PASSWORD" 
+          echo "$WTF_CSRF_SECRET_KEY"
+          echo "$FLASK_ENV"
 
       - name: Run pip to upgrade pip and install
         run: |
@@ -69,4 +73,4 @@ jobs:
 
       - name: Run pytest setup
         run: |
-          python -m pytest -v
+          python -m pytest -v -m "admin"

@@ -49,6 +49,6 @@ TESTING = True
 SECRET_KEY = os.environ.get('SECRET_KEY') or "ThisIsASecretKeyDontUseItInProduction"
 WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY')
 
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or "admin@example.com" 
+# ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or "admin@example.com" 
 
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or '123123'
+# ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or '123123'
