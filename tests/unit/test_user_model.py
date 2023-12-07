@@ -2,6 +2,8 @@ import pytest
 from flask import Flask
 from src.models import db, User, load_user
 from sqlalchemy.exc import IntegrityError
+from src.utils.create_initial_user import create_user_if_not_exists
+
 
 
 @pytest.mark.users
@@ -96,8 +98,9 @@ def test_initial_user(app):
     WHEN first created
     THEN then user exists
     """
- 
+    create_user_if_not_exists()
     # Example: Insert a user into the database
     with app.app_context():
         loaded_user = User.query.first()
-    assert loaded_user.is_admin == True
+        print(loaded_user)
+        assert loaded_user.is_admin == True

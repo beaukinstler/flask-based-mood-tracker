@@ -38,14 +38,6 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
 
-
-
-
-
-
-
-
-    
     with app.app_context():
         if os.environ.get('FLASK_ENV') == 'development':
             db.create_all()
@@ -63,19 +55,5 @@ def create_app():
         app.register_blueprint(api_moods.bp)
         app.register_blueprint(api_users.bp)
         app.register_blueprint(api_auth.bp)
-        app.register_blueprint(main)
-        from src.models import User, load_user
-        user = User.query.first()
-        if user:
-        
-            return app
-        
-        else:
-            admin_user = 'admin@example.com'
-            admin_password = '123123'
-            user = User(admin_user, admin_password)
-            user.is_admin = True
-            db.session.add(user)
-            db.session.commit()
-
-            return app
+        app.register_blueprint(main)    
+        return app
