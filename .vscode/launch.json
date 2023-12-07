@@ -69,7 +69,13 @@
             "justMyCode": true,
             "args": [
                 "-v"
-            ]
+            ],
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_APP": "wsgi.py",
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
+            }
         },
         {
             "name": "pytest suppress warnings",
