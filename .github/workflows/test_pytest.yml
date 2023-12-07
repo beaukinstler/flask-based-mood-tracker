@@ -26,6 +26,8 @@ jobs:
       FLASK_ENV: development
       WTF_CSRF_SECRET_KEY: "7K6VpJ7VA5akurC2FPjKLJKWuFws9ZV9Pcm9KKb4"
       SECRET_KEY: "GithubActionsSecretKeyForFlask"
+      ADMIN_USERNAME: "admin@example.com"
+      ADMIN_PASSWORD: "Gmd7J7VA5akurC2FPjKLJKWuFws9ZV9Pcm9KKb4"
 
     steps:
       # Runs a single command using the runners shell, using run:
