@@ -14,16 +14,16 @@ def test_moods_get_page(testclient_authenticated):
     WHEN the '/moods/all' page is requested (GET)
     THEN check that the response is valid
     """
-    with testclient_authenticated as test_client:
-        mood = Mood("temp")
-        db.session.add(mood)
-        db.session.commit()
-        mood2 = Mood("temp2")
-        db.session.add(mood2)
-        db.session.commit()
+    # with testclient_authenticated as test_client:
+    mood = Mood("temp")
+    db.session.add(mood)
+    db.session.commit()
+    mood2 = Mood("temp2")
+    db.session.add(mood2)
+    db.session.commit()
 
-        gui = testclient_authenticated.get(url_for('moods.all'), follow_redirects=True)
-        assert gui.status_code == 200
+    gui = testclient_authenticated.get(url_for('moods.all'), follow_redirects=True)
+    assert gui.status_code == 200
 
 
 @pytest.mark.unit

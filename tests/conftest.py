@@ -40,7 +40,7 @@ def app():
 
 @pytest.fixture()
 def testclient(app):
-    yield app.test_client()
+    return app.test_client()
 
 
 @pytest.fixture()
@@ -55,6 +55,6 @@ def testclient_authenticated(app):
         with testclient:
             login_user(user, remember=True)
             
-        yield testclient
+            yield testclient
 
 
