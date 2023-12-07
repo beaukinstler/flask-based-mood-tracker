@@ -100,7 +100,6 @@ def test_initial_user(app):
     """
     create_user_if_not_exists()
     # Example: Insert a user into the database
-    with app.app_context():
-        loaded_user = User.query.first()
-        print(loaded_user)
-        assert loaded_user.is_admin == True
+    loaded_user = User.query.first()
+    print(loaded_user)
+    assert loaded_user.is_admin == True
