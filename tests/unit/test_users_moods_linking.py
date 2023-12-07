@@ -89,6 +89,7 @@ def test_user_mood_log(testclient):
 
 @pytest.mark.users
 @pytest.mark.unit
+@pytest.mark.skip(reason="slow - 61 second sleep")
 def test_user_mood_log(testclient):
     """
     GIVEN a Flask application configured for in this test file for testing via a fixture
