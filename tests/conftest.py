@@ -25,7 +25,7 @@ def load_env():
 def app():
 
     app = create_app()
- 
+    # app.config.update({'SECRET_KEY':'testing'})
 
     # Initialize the database
     #db.init_app(app)
@@ -44,17 +44,17 @@ def testclient(app):
 
 
 @pytest.fixture()
-def testclient_authenticated(app):
-    with app.app_context():
-        testclient = app.test_client()
-        username= 'test@example.com'
-        password = 'password'
-        user = User(username,password)
-        db.session.add(user)
-        db.session.commit()
-        with testclient:
-            login_user(user, remember=True)
-            
-            yield testclient
+def testclient_authenticated(app,testclient):
+    # with app.app_context():
+    # testclient = app.test_client()
+    username= 'test@example.com'
+    password = 'password'
+    user = User(username,password)
+    db.session.add(user)
+    db.session.commit()
+    with testclient:
+        login_user(user, remember=True)
+        
+        yield testclient
 
 
