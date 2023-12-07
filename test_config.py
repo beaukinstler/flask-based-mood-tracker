@@ -46,11 +46,9 @@ SQLALCHEMY_ECHO = False
 
 TESTING = True
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY') or "ThisIsASecretKeyDontUseItInProduction"
 WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY')
 
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
-ADMIN_USERNAME = "admin@example.com" if not ADMIN_USERNAME else ADMIN_USERNAME
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or "admin@example.com" 
 
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
-ADMIN_PASSWORD = "admin@example.com" if not ADMIN_PASSWORD else ADMIN_PASSWORD
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or '123123'
