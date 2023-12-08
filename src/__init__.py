@@ -38,21 +38,30 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
 
-    with app.app_context():
-        if os.environ.get('FLASK_ENV') == 'development':
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+
+#######
+# importing and registering the bluprints from the api folder
+#######
+
+
+    from .api import moods as api_moods, users as api_users, auth as api_auth
+    from .main import main, users, moods, auth
+    app.register_blueprint(moods.bp)
+    app.register_blueprint(users.bp)
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(api_moods.bp)
+    app.register_blueprint(api_users.bp)
+    app.register_blueprint(api_auth.bp)
+    app.register_blueprint(main)
+
+    if os.environ.get('FLASK_ENV') == 'development':
+        with app.app_context():
             db.create_all()
- 
-        
-        #######
-        # importing and registering the bluprints from the api folder
-        #######
-        from .api import moods as api_moods, users as api_users, auth as api_auth
-        from .main import main, users, moods, auth
-        app.register_blueprint(moods.bp)
-        app.register_blueprint(users.bp)
-        app.register_blueprint(auth.bp)
-        app.register_blueprint(api_moods.bp)
-        app.register_blueprint(api_users.bp)
-        app.register_blueprint(api_auth.bp)
-        app.register_blueprint(main)    
-        return app
+
+    return app
