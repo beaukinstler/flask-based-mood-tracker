@@ -100,6 +100,7 @@ class User(UserMixin,  db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.Text, nullable=False, unique=True)
+    is_admin = db.Column(db.Boolean, default=False)
     password = db.Column(db.Text, nullable=False)
     timezone = 'US/Eastern'
     moods = db.relationship(
@@ -107,7 +108,6 @@ class User(UserMixin,  db.Model):
         cascade='all, delete-orphan',
         back_populates="user"
     )
-    is_admin = False
 
     def __init__(self, email, password):
         self.email = email

@@ -15,6 +15,7 @@ from src.models import db, User
 from dotenv import load_dotenv
 from flask_login import login_user, current_user, logout_user
 from src.models import User
+from src.utils import create_initial_user
 
 @pytest.fixture(scope='session', autouse=True)
 def load_env():
@@ -31,6 +32,8 @@ def app():
     #db.init_app(app)
     with app.app_context():
         db.create_all()
+        # Create the initial user
+        create_initial_user.create_user_if_not_exists()
 
         yield app
         db.session.close()
