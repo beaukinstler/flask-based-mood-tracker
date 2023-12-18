@@ -40,13 +40,12 @@ def test_model_update(testclient):
     user = User(email=user_email, password=user_password)
     db.session.add(user)
     db.session.commit()
-    assert user.id == 1
+    assert user.id == 2
 
     with pytest.raises(IntegrityError):
         user2 = User(email=user_email, password=user_password)
         db.session.add(user2)
         db.session.commit()
-        assert user.id == 2
     db.session.rollback()
 
     user_email = 'nondup@example.com'
@@ -54,13 +53,13 @@ def test_model_update(testclient):
     user2 = User(email=user_email, password=user_password)
     db.session.add(user2)
     db.session.commit()
-    assert user2.id == 2
+    assert user2.id == 3
 
 
 @pytest.mark.admin
 @pytest.mark.users
 @pytest.mark.unit
-def test_model_update(testclient):
+def test_first_user_is_admin(testclient):
     """
     GIVEN a new user
     WHEN first created
@@ -68,9 +67,5 @@ def test_model_update(testclient):
     """
 
     # Example: Insert a user into the database
-    user_email = 'user01@example.com'
-    user_password = 'password'
-    user = User(email=user_email, password=user_password)
-    db.session.add(user)
-    db.session.commit()
-    assert user.is_admin == False
+    user = db.session.query(User).first()
+    assert user.is_admin == True

@@ -90,7 +90,7 @@ def test_users_get_page_with_users(testclient_authenticated):
     """
     assert response.text.find("user_id") > 0
     response_dict = json.loads(response.text)
-    assert str(response_dict["user_id"]) == "1"
+    assert str(response_dict["user_id"]) == "2"
 
 @pytest.mark.users
 @pytest.mark.unit

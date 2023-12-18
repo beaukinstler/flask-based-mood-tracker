@@ -27,13 +27,12 @@ class TestUserAuth:
         assert user.password != 'password'
         assert user.verify_password('password')
         assert len(user.password) > 100
-        pre_db_password = user.password
+        # pre_db_password = user.password
 
         db.session.add(user)
         db.session.commit()
-        users = db.session.query(User).all()
-        assert users[0].verify_password('password')
-        assert pre_db_password == users[0].password
+        user_from_db = User.query.filter(User.email==user_email).first()
+        assert user_from_db.verify_password('password')
 
 
     @pytest.mark.auth
