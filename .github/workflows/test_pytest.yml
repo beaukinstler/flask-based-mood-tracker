@@ -7,8 +7,7 @@ on:
     branches:
       - dev
       - testing-gh-action
-      - default-admin-user
-      - dev-2
+      - dev-3
   pull_request:
     branches:
       - main
