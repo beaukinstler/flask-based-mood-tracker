@@ -1,6 +1,6 @@
 
 import os,json
-from flask import Flask
+from flask import Flask, render_template
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap5
@@ -19,6 +19,8 @@ migrate = Migrate()
 bootstrap = Bootstrap5()
 
 
+def page_not_found(e):
+  return render_template('403.html'), 403
 
 def create_app():
     config_file = "config.py"
@@ -29,6 +31,8 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_pyfile(config_file, silent=True)
+
+    app.register_error_handler(403, page_not_found)
 
     db.init_app(app)
     migrate.init_app(app, db)
