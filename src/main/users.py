@@ -33,7 +33,7 @@ def all_users():
             result.append(user.serialize())
         return jsonify(result)
     else:
-        return abort(400)
+        return abort(403, "Not authorized to view all users")
 
 
 # @bp.route("", methods=['POST'])
