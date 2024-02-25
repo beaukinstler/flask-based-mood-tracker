@@ -54,7 +54,6 @@ def index():
         mood = [mood for mood in moods if mood.description in flask_request.form].pop()
 
         if mood:
-            # mood_description = mood.description
             log = UserMoodLog()
             log.mood = mood
             log.user = current_user
@@ -137,53 +136,3 @@ def update(id: int):
     db.session.commit()
     return jsonify(mood.serialize())
 
-
-# @bp.route("/<int:id>/sign_up", methods=['POST'])
-# def sign_up(id: int):
-#     try:
-#         if 'teacher_id' not in request.json:
-#             return abort(400)
-#         teacher = Teacher.query.get_or_404(request.json['teacher_id'])
-#         mood = Mood.query.get_or_404(id)
-
-#         # lookup the id, but until then use default
-#         classname = "CS 101" if 'class' not in request.json else request.json['class']
-
-#         # mood.teachers.append(teacher, class_name=classname)
-#         link = teachers_moods.insert().values(
-#             mood_id=mood.id, teacher_id=teacher.id, class_name=classname)
-#         db.session.execute(link)
-
-#         db.session.commit()
-#         return jsonify(mood.serialize())
-
-#     except IntegrityError as e:
-#         return abort(409)
-
-
-# @bp.route("/<int:id>/drop_class", methods=['DELETE'])
-# def drop_class(id: int):
-#     try:
-#         if 'teacher_id' not in request.json:
-#             return abort(400)
-#         teacher = Teacher.query.get_or_404(request.json['teacher_id'])
-#         mood = Mood.query.get_or_404(id)
-
-#         # lookup the id, but until then use default
-#         classname = "CS 101" if 'class' not in request.json else request.json['class']
-
-#         # mood.teachers.append(teacher, class_name=classname)
-#         delete = (
-#             teachers_moods.delete()
-#             .where(teachers_moods.c.mood_id == mood.id)
-#             .where(teachers_moods.c.teacher_id == teacher.id)
-#             .where(teachers_moods.c.class_name == str(classname))
-#         )
-#         result = db.session.execute(delete)
-#         db.session.commit()
-
-#         return jsonify(mood.serialize())
-
-#     except Exception() as e:
-
-#         return abort(400)
