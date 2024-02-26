@@ -10,8 +10,11 @@
     <input hidden type="text" value="" id="mood">
     <div class="d-grid gap-2 mt-3">
         {{ form.note }}
-        {{ form.happy }}
-        {{ form.sad }}
+        {% for mood in moods %} 
+        <input class="btn btn-{{mood.color}}" type="submit" value="{{ mood.description }}" id="{{ mood.id }}" name="{{ mood.description}}">
+        {% endfor %}
+
+
 
     </div>
 </form>
