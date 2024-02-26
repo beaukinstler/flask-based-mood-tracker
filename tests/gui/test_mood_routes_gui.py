@@ -37,7 +37,7 @@ def test_moods_post_create(testclient_authenticated):
 
     # Create a test client using the Flask application configured for testing
     data = {"description": "sad"}
-    response = testclient_authenticated.post('/moods/create', json=data)
+    response = testclient_authenticated.post('/api.v1/moods/create', json=data)
     dict_data = json.loads(response.text)
     assert response.status_code == 200
     assert str(dict_data["mood_id"]) == "1"
@@ -54,7 +54,7 @@ def test_moods_post_create_404(testclient_authenticated):
 
     # Create a test client using the Flask application configured for testing
     data = {"bad_key": "sad"}
-    response = testclient_authenticated.post('/moods/create', json=data)
+    response = testclient_authenticated.post('/api.v1/moods/create', json=data)
     assert 'text/html' in response.content_type
     assert response.status_code == 400
 
