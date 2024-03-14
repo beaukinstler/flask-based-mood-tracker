@@ -24,11 +24,11 @@
         {% endif %}
             <td>{{user.id}}</td>
             <td>{{ user.email }}</td>
-            <td><a href="{{url_for('users.update_user', user_id=user.id)}}" >Edit
+            <td><a href="{{url_for('users.update_user', user_id=user.id)}}" >
             {% if user.is_admin %}
-            <td>Yes</td>
+            <span style="color: chocolate;" >Yes</span> 
             {% else %}
-            <td>No</td>
+            <span style="color:darkgreen;" >No</span> 
             {% endif %}
             </a></td>
         </tr>
