@@ -1,8 +1,9 @@
-from flask import Blueprint, jsonify, request as flask_request, render_template, abort
+from flask import Blueprint, jsonify, request as flask_request, render_template, abort, redirect, url_for
 from ..models import User
 from src import db
 from sqlalchemy.exc import IntegrityError
 from flask_login import login_required, current_user
+
 
 
 bp = Blueprint("users", __name__, url_prefix="/users")
@@ -25,56 +26,26 @@ def me():
 
 @bp.route("/all", methods=['GET'])
 @login_required
-def all_users():
+def all_users(page=1, per_page=10):
     if current_user.is_admin:
-        users = User.query.all()
-        result = []
-        for user in users:
-            result.append(user.serialize())
-        return jsonify(result)
+        pages = User.query.paginate(page, per_page, False)
+        return render_template('all_users.html', pages=pages, current_user=current_user)
+        
     else:
         return abort(403, "Not authorized to view all users")
 
-
-# @bp.route("", methods=['POST'])
-# def create():
-#     if 'description' not in request.json:
-#         return abort(400)
-#     user = User(request.json['description'])
-#     return jsonify(user.serialize())
-
-
-# @bp.route("/<int:id>", methods=['GET'])
-# def show(id: int):
-#     user = User.query.get_or_404(id)
-#     return jsonify(user.serialize())
-
-
-# @bp.route("/<int:id>", methods=['DELETE'])
-# def delete(id: int):
-#     user = User.query.get_or_404(id)
-#     result = {"message": "DELETE via HTTP",
-#               "id": user.id, 'description': user.description}
-#     db.session.delete(user)
-#     db.session.commit()
-#     return jsonify(result)
-
-
-# @bp.route("/<int:id>", methods=['PUT', 'PATCH'])
-# def update(id: int):
-#     """
-#     update a user name
-#     """
-
-#     if 'description' not in request.json:
-#         return abort(400)
-#     user = User.query.get_or_404(id)
-
-#     description = request.json['description']
-#     teacher_id = request.json['teacher_id']
-
-#     if description is not None and description != '':
-#         user.description = description
-
-#     db.session.commit()
-#     return jsonify(user.serialize())
+@bp.route("/<int:user_id>/edit", methods=['GET','POST'])
+@login_required
+def update_user(user_id: int):
+    if current_user.is_admin:
+        if flask_request.method == 'GET':
+            user = User.query.get_or_404(user_id)
+            return render_template('user.html', user=user, current_user=current_user)
+        elif flask_request.method == 'POST':
+            user = User.query.get_or_404(user_id)
+            user.is_admin = True if flask_request.form.get('is_admin', False) == 'on' else False
+            user.email = flask_request.form['email']
+            db.session.commit()
+            return redirect(url_for('users.all_users'))
+    else:
+        return abort(403, "Not authorized to edit users")

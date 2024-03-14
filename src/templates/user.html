@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>User {{ user.id }}</h1>
+
+<form action="" method="POST">
+  <label for="email">Username</label>
+  <input type="text" id="email" name="email" value="{{ user.email }}">
+  <br><br>
+  <label for="is_admin">Is Admin</label>
+  {% if user.is_admin %}
+  <input type="checkbox" id="is_admin" name="is_admin" checked >
+  {% else %}
+  <input type="checkbox" id="is_admin" name="is_admin" >
+  {% endif %}
+  <br><br>
+  <button type="submit">Save changes</button>
+</form>
+
+
+{% endblock %}
