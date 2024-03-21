@@ -69,3 +69,18 @@ def test_first_user_is_admin(testclient):
     # Example: Insert a user into the database
     user = db.session.query(User).first()
     assert user.is_admin == True
+
+@pytest.mark.admin
+@pytest.mark.users
+@pytest.mark.unit
+def test_first_of_many_user_is_admin(testclient_authenticated_many_users):
+    """
+    GIVEN a new user
+    WHEN first created
+    THEN then user.is_admin returns "False"
+    """
+
+    # Example: Insert a user into the database
+    user = db.session.query(User).first()
+    assert user.is_admin == True
+
