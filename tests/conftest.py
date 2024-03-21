@@ -60,3 +60,19 @@ def testclient_authenticated(app):
     yield testclient
 
 
+@pytest.fixture()
+def testclient_authenticated_many_users(app):
+    testclient = app.test_client()
+    for i in range(11):
+        username=f"test{i}@example.com"
+        password = 'password'
+        user = User(username,password)
+        db.session.add(user)
+        db.session.commit()
+    with testclient:
+        user = User.query.first()
+        login_user(user, remember=True)
+        
+    yield testclient
+
+
