@@ -64,7 +64,7 @@ def test_model_update(testclient):
 @pytest.mark.admin
 @pytest.mark.users
 @pytest.mark.unit
-def test_first_user_is_admin(testclient):
+def test_first_user_is_admin(testclient_authenticated_many_users):
     """
     GIVEN a new user
     WHEN first created
