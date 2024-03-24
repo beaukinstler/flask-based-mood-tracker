@@ -38,15 +38,15 @@
 
 <!-- credit https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/pagination/ -->
 <div class=page-items>
-    {{ pages.first }} - {{ pages.last }} of {{ pages.total }}
+    Page {{ pages.page }} of {{ pages.pages }}
   </div>
   <div class=pagination>
-    {% for page in pages.iter_pages() %}
-      {% if page %}
-        {% if page != pages.page %}
-          <a href="{{ url_for('users.all_users', page=page, per_page=pages.per_page) }}">{{ page }}</a>
+    {% for p in pages.iter_pages() %}
+      {% if p %}
+        {% if p != pages.page %}
+          <a href="{{ url_for('users.all_users', page=p, per_page=pages.per_page) }}"> {{ p }} </a>
         {% else %}
-          <strong>{{ page }}</strong>
+          <strong> {{ p }} </strong>
         {% endif %}
       {% else %}
         <span class=ellipsis>…</span>

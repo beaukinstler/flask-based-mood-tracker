@@ -26,9 +26,11 @@ def me():
 
 @bp.route("/all", methods=['GET'])
 @login_required
-def all_users(page=1, per_page=10):
+def all_users():
     if current_user.is_admin:
-        pages = User.query.paginate(page, per_page, False)
+        current_page = flask_request.args.get('page', type=int, default=1)
+        per_page = flask_request.args.get('per_page',  type=int, default=10)
+        pages = User.query.paginate(current_page, per_page, False)
         return render_template('all_users.html', pages=pages, current_user=current_user)
         
     else:

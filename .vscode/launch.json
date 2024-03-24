@@ -78,6 +78,23 @@
             ]
         },
         {
+            "name": "pytest gui",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true,
+            "env": {
+                "FLASK_ENV": "development",
+                "FLASK_APP": "wsgi.py",
+                "FLASK_DEBUG": "1",
+                "TESTING": "1"
+            },
+            "args": [
+                "-v",
+                "-m gui"
+            ]
+        },
+        {
             "name": "pytest suppress warnings",
             "type": "python",
             "request": "launch",

@@ -27,10 +27,10 @@ def index():
 #     return jsonify(user.serialize())
 
 
-# @bp.route("/<int:id>", methods=['GET'])
-# def show(id: int):
-#     user = User.query.get_or_404(id)
-#     return jsonify(user.serialize())
+@bp.route("/<int:id>", methods=['GET'])
+def show(id: int):
+    user = User.query.get_or_404(id)
+    return jsonify(user.serialize())
 
 
 @bp.route("/delete", methods=['DELETE'])
