@@ -25,3 +25,21 @@ def create_user_if_not_exists():
     except Exception as e:
         print(e)
         pass
+
+    if os.environ.get('TESTING') == "1":
+        creat_test_users()
+
+
+def creat_test_users():
+    try:
+        if User.query.count() > 1:
+            return
+        for i in range(1, 21):
+            user = User(f"test_user{i}", "123123")
+            db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        raise
+        
+    pass
