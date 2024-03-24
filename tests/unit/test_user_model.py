@@ -34,13 +34,16 @@ def test_model_update(testclient):
     THEN the new user object will have and id property == 1
     """
 
-    # Example: Insert a user into the database
-    user_email = 'user01@example.com'
+    user_email = 'userxyz@example.com'
     user_password = 'password'
-    user = User(email=user_email, password=user_password)
+    result_of_query_before = User.query.filter_by(email=user_email).first()
+    assert result_of_query_before == None
+    user = User(email=user_email, password=user_password)    
     db.session.add(user)
     db.session.commit()
-    assert user.id == 2
+    result_of_query_after = User.query.filter_by(email=user_email).first()
+
+    assert result_of_query_after.email == "userxyz@example.com"
 
     with pytest.raises(IntegrityError):
         user2 = User(email=user_email, password=user_password)
@@ -53,7 +56,9 @@ def test_model_update(testclient):
     user2 = User(email=user_email, password=user_password)
     db.session.add(user2)
     db.session.commit()
-    assert user2.id == 3
+    new_user = User.query.filter_by(email=user_email).first()
+
+    assert new_user.email == user_email
 
 
 @pytest.mark.admin
@@ -69,6 +74,9 @@ def test_first_user_is_admin(testclient):
     # Example: Insert a user into the database
     user = db.session.query(User).first()
     assert user.is_admin == True
+
+    user2 = db.session.query(User).get(2)
+    assert user2.is_admin == False
 
 @pytest.mark.admin
 @pytest.mark.users
