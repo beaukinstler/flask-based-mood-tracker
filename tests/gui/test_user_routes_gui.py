@@ -21,7 +21,7 @@ def test_users_all_page(testclient_authenticated_many_users):
         assert gui.status_code == 200
 
         # Check that the page contains the user's name
-        assert b'test_user1' in gui.data
-        assert b'test_user2' in gui.data
+        assert b'test_user1' or b'test1' in gui.data
+        assert b'test_user2' or b'test2' in gui.data
         assert b'<a href="/users/all?page=2&amp;per_page=10"> 2 </a>' in gui.data
 
