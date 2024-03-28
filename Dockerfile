@@ -15,7 +15,6 @@ WORKDIR /app
 
 # Install pip requirements
 COPY requirements.txt /app/requirements.txt
-# RUN python -m pip install -r requirements.txt
 
 COPY src /app/src
 COPY migrations /app/migrations
