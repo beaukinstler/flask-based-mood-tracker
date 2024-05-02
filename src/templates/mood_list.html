@@ -3,7 +3,7 @@
 {% block content %}
 <h1>moods list</h1>
 
-<table class="table-secondary">
+<table class="table">
     <thead>
         <tr>
             <th>description</th>
@@ -11,14 +11,8 @@
     </thead>
     <tbody>
         {% for mood in moods %}
-        {% if (loop.index % 2) == 0 %}
-        <tr class="table-light">
-        {% else %}
-        <tr class="table-secondary">
-
-        {% endif %}
-
-            <td>{{ mood.description }}</td>
+        <tr class="table-{{mood.color}}">
+            <td class="table-{{mood.color}}">{{ mood.description }}</td>
         </tr>
         {% endfor %}
 </table>

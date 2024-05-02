@@ -123,6 +123,8 @@ def all():
         select(Mood).order_by(Mood.id.asc())).scalars().all()
     if moods is None:
         return abort(404)
+    for m in moods:
+        setattr(m, 'color', mood_colors[m.description] if m.description in mood_colors else 'secondary')
     return flask_render_template('mood_list.html', moods=moods)
 
 

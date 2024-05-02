@@ -157,7 +157,7 @@ def test_moods_patch_or_put_bad_key(testclient_authenticated):
 def test_mood_button(testclient_authenticated):
     """
     GIVEN a Flask application configured for testing via a fixture
-    WHEN the '/mood' page is requested (GET) 
+    WHEN the '/mood' page is requested (GET)
     THEN There should be a happy and sad button
     """
 
@@ -169,3 +169,19 @@ def test_mood_button(testclient_authenticated):
     assert 'sad' in response.text
     assert 'happy' in response.text
     assert response.status_code == 200
+
+@pytest.mark.moods
+def test_moods_types_list(testclient_authenticated):
+    """
+    GIVEN a Flask application configured for testing via a fixture
+    WHEN the '/moods/all' page is requested (GET)
+    THEN There should be colors in the td and tr elements
+    """
+
+    # Create a test client using the Flask application configured for testing
+
+    response = testclient_authenticated.get('/moods')
+    response = testclient_authenticated.get('/moods/all')
+    assert 'text/html' in response.content_type
+    assert 'table-primary' in response.text
+    assert 'table-warning' in response.text
