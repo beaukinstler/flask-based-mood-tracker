@@ -11,11 +11,15 @@
             "module": "flask",
             "env": {
                 "FLASK_APP": "wsgi.py",
-                "FLASK_DEBUG": "1"
+                // "FLASK_DEBUG": "1"
+                "FLASK_ENV": "development",
+                // "TESTING": "1" // will create test users
             },
             "args": [
                 "run",
-                "--debug"
+                // "--debug"
+                "--port",
+                "5002",
             ],
             "jinja": true,
             "justMyCode": true,
